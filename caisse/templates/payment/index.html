@@ -1,0 +1,129 @@
+{% extends 'base/base1.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block titre %}<title>Payement</title>{% endblock %}
+</head>
+<style>
+    .print-link {
+        text-decoration: none;
+        color: rgb(31, 29, 29);
+        margin-left: 10px;
+    }
+
+    .print-link:hover {
+        color: #007bff;
+        transition: color 0.3s;
+    }
+
+    .edit,
+    .delete {
+        text-decoration: none;
+        color: rgb(31, 29, 29);
+        margin-left: 10px;
+    }
+
+    .edit:hover,
+    .delete:hover {
+        color: #007bff;
+        transition: color 1.5s ease;
+    }
+</style>
+
+
+
+    <div class="content">
+
+        {% block form %}
+        
+        {% endblock %}
+
+        {% block ajouter %}
+        <a href="{% url 'payment_create' %}"><img src="{% static '/img/Ellipse 1 (2).png' %}"></a>
+        {% endblock %}
+
+        {% block title %} Payement {% endblock %}
+        {% block contenu %}
+        <div>
+            <input type="search" placeholder="rechercher" style="width: 100%; padding: 12px 8px; border: none; 
+               border-radius: 18px; background-color:lightgray;
+               margin: 25px 0px; font-size: 25px;" id="searchInput">
+        </div>
+
+        <div class="tab">
+            <table id="inscriptionsTable">
+                <thead>
+                    <tr>
+                        <th>Inscription</th>
+                        <th>Montant</th>
+                        <th>Motif</th>
+                        <th>Date payement</th>
+                        <th>Caissier</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for list in liste %}
+                    <tr>
+                        <td>{{list.inscription}}</td>
+                        <td>{{list.montant}}</td>
+                        <td>{{ list.motif }}</td>
+                        <td>{{list.date_paiement}}</td>
+                        <td>{{list.utilisateur.username}}</td>
+                        <td>
+                            <a href="{% url 'payment_edit' id=list.id %}" class="edit"
+                                style="text-decoration: none; cursor: pointer; margin-right: 2px;">
+                                <i class="fas fa-edit" style="color: black;"></i>
+                            </a>
+                            <a href="{% url 'pdf_generate' id=list.id %}" target="_blank" class="print-link"
+                                style="text-decoration: none;">
+                                <i class="fas fa-print" style="color: black;"></i>
+                            </a>
+                            <a href="{% url 'payment_delete' id=list.id %}" class="delete"
+                                style="text-decoration: none; margin-left: 2px;">
+                                <i class="fas fa-trash-alt" style="color: black;"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+        {% endblock %}
+
+    </div>
+
+{% block scripts %} 
+<script>
+       document.getElementById('searchInput').addEventListener('keyup', function () {
+        const filter = this.value.toLowerCase();
+        const rows = document.querySelectorAll('#inscriptionsTable tbody tr');
+
+        rows.forEach(row => {
+          const cells = row.getElementsByTagName('td');
+          let rowContainsFilter = false;
+
+          for (let i = 0; i < cells.length; i++) {
+            if (cells[i].textContent.toLowerCase().includes(filter)) {
+              rowContainsFilter = true;
+              break;
+            }
+          }
+
+          // Afficher toutes les lignes si le champ est vide
+          if (filter === '' || rowContainsFilter) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      });
+</script>
+{% endblock %}
+
+</html>

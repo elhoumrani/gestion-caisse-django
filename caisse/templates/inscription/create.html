@@ -1,0 +1,90 @@
+{% extends 'base/baseform.html' %}
+{% load static %}
+
+    {% block titre %}<title>Ajout</title>{% endblock %}
+    {% block styles %}
+    <style>
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+                border-radius: 4px;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd; /* Fond jaune clair */
+            color: #856404; /* Texte sombre */
+            border-color: #ffeeba; /* Bordure jaune */
+        }
+    </style>
+    {% endblock %}
+
+    {% block contenu %}
+    <div class="container">
+        <h4 style="text-align: center;">Inscription</h4>
+        {% if msg %}
+            <div style= " text-align: center; background-color: #fff3cd;  color: #856404; padding: 5px;margin-bottom: 20px; margin-top: 12px;">
+                {{ msg }}
+            </div>
+        {% endif %}
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.classe.label_tag }}<br>
+                 {{ form.classe }}
+             </div>
+     
+             <div class="form-group">
+                {{ form.eleve.label_tag }}<br>
+                 {{ form.eleve }}
+             </div>
+             <div class="form-group">
+                {{ form.regime.label_tag }}<br>
+                 {{ form.regime }}
+             </div>
+             <div class="form-group" id="nombre_mois_group" style="display: none;" >
+                <label for="nombre_mois">Pourcentage</label><br>
+                <select id="pourcentage_value"  name="pourcentage_value">
+                    <option value=""></option>
+                    <option value="50%">50%</option>
+                    <option value="100%">100%</option>
+                </select>
+            </div>
+     
+             <div class="form-group">
+                {{ form.annee_scolaire.label_tag }}<br>
+                 {{ form.annee_scolaire }}
+             </div>         
+            <div class="btn">
+                <button type="submit">Ajouter</button>
+                <button type="reset">annuler</button>
+            </div>
+        </form>
+    </div>
+
+    {% endblock %}
+
+    {% block scripts %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+        const regime = document.getElementById('id_regime');
+        console.log(regime.target)
+        if (regime) {
+            regime.addEventListener('change', function (event) {
+                const hiddenInput = document.getElementById('nombre_mois_group');
+                console.log("Valeur sélectionnée : ", event.target.value); // Affiche la valeur dans la console
+                if(!hiddenInput) return ;
+                if(event.target.value ==='exonoré'){
+                    hiddenInput.style.display = "block";
+                    return;
+                }
+                hiddenInput.style.display = "none";
+            })
+        }
+
+        })
+    </script>
+
+    {% endblock %}

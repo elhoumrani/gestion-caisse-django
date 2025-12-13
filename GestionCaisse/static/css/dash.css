@@ -1,0 +1,245 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    width: 100%;
+    background: #E5E7EB;
+    position: relative;
+    display: flex;
+}
+
+.sidebar {
+    background: rgba(75, 77, 160, 1);
+    width: 250px;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+}
+.sidebar-head {
+    display: flex;
+    align-items: center;
+    color: #fff;
+    padding: 30px 0 0 30px;
+}
+
+.sidebar-head img {
+    width: 60px;
+    height: 60px;
+    border-radius: 40%;
+    margin-right: 12px;
+}
+
+.items {
+    margin-top: 40px;
+    
+}
+
+.items li{
+    list-style: none;
+    padding: 15px 0;
+    font-size: 18px;
+    margin: 0 10px 0 25px;
+    transition: 0.3s ease;
+}
+
+.items li a {
+    text-decoration: none;
+    color: #fff;
+    margin: 0 10px 0 25px;
+    font-weight: 300px;
+    transition: 0.3s ease;
+}
+
+.items li:hover{
+    background: #34456b;
+    border-radius: 6px ;
+    cursor: pointer;
+}
+
+.items a:hover{
+    color: #f9f9f9;
+    font-weight: 500px;
+}
+
+
+#main {
+    width: calc(100% - 250px);
+    margin-left: 250px;
+    position: relative;
+}
+
+#main .navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    padding: 15px 30px;
+    border-bottom: 3px solid rgba(75, 77, 160, 1);
+    position: fixed;
+    width: calc(100% - 250px);
+    z-index: 10000;
+    
+}
+
+.recherche {
+    display: flex;
+    padding: 12px 12px;
+}
+
+#rech {
+    margin: 0 4px ;
+}
+
+#main .navbar .recherche input {
+    padding: 6px 14px;
+    border: 1px solid #d7dbe6;
+    font-size: 14px;
+    outline: none;
+    border-radius: 8px;
+}
+
+#main .navbar .image img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.titre {
+    color: #444a53;
+    padding: 30px 30px 0 30px;
+    font-size: 24px;
+    font-weight: 700;
+    margin-top: 70px;
+}
+
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropbtn {
+    background-color: rgba(75, 77, 160, 1);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 160px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: rgba(75, 77, 160, 1);
+}
+
+.values {
+    padding: 24px 24px 0 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    z-index: 2;
+
+}
+.values .val-box {
+    background: #fff;
+    width: 230px;
+    padding: 16px 20px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 10px;
+}
+
+.values .val-box .imag{
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 6px;
+}
+
+.navbar .recherche .add img{
+    width: 24px;
+    height: 24px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 6px;
+}
+
+.values .val-box  h3 {
+    font-family: 18px;
+    font-weight: 600;
+}
+.values .val-box  span {
+    font-family: 15px;
+    color: #828997;
+}
+
+.tab {
+    display: block;
+    margin-top: 2px;
+    z-index: 2; /* Inférieur aux éléments fixes */
+    width: 100%;
+    margin-right: 4px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    font-size: 12px;
+}
+th, td {
+    padding: 15px 12px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 14px;
+}
+th {
+    background-color: rgba(100, 102, 175, 1);
+    color: white;
+    font-weight: bold;
+}
+tr:hover {
+    background-color: #f9f9f9;
+}
+tr:last-child td {
+    border-bottom: none;
+}
+

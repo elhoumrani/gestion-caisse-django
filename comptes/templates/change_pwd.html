@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Changer mon mot de passe</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        input[type="password"] {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 20px;
+            margin-left: 6px;
+            margin-right: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: rgba(75, 77, 160, 1);
+            color: #fff;
+            padding: 10px 20px;
+            width: 95%;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h4>Mettre à jour votre mot de passe</h4>
+        {% if msg %}
+            <p style="color: red; text-align: center;">{{ msg }}</p>
+        {% endif %}
+        <form action="" method="post">
+            {% csrf_token %}  
+            <label for="old_pwd">Votre ancien mot de passe </label><br>  
+            {{ form.old_password }}
+            {{ form.old_password.errors }} <br>
+            <label for="old_pwd">Nouveau mot de passe </label><br>  
+            {{ form.new_password1 }}
+            {{ form.new.errors }}
+            <label for="old_pwd">Confirmer mot de passe </label><br>  
+            {{ form.new_password2}}
+            {{ form.new_password2.errors }}
+            <button type="submit">Valider</button>
+        </form>
+    </div>
+</body>
+</html>

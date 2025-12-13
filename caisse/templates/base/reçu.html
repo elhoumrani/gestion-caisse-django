@@ -1,0 +1,127 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reçu de Paiement</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.receipt-container {
+    width: 148mm; /* A5 width */
+    height: 210mm; /* A5 height */
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+header {
+    text-align: center;
+    border-bottom: 2px solid #333;
+    padding-bottom: 10px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+header p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.receipt-details, .payer-details, .payment-details {
+    margin: 20px 0;
+}
+
+.receipt-details h2, .payer-details h3, .payment-details h3 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 5px;
+}
+
+.payment-details table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.payment-details table th, .payment-details table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.payment-details table th {
+    background-color: #f2f2f2;
+}
+
+footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+    </style>
+
+</head>
+<body>
+    <div class="receipt-container">
+        <header>
+            <h1>Lycée Fort Lamy</h1>
+            <p>Adresse: 123 Rue 40 metre, N'djamena, Tchad</p>
+            <p>Téléphone: +235 63 64 93 87</p>
+            <h2 style="text-align: center;">Reçu de Paiement</h2>
+        </header>
+        <section class="receipt-details">
+            <p>Date :  {{ payement.date_paiement }}</p>
+            <p>Numéro de Reçu : {{ payement.numero_recu }}</p>
+        </section>
+        <section class="payer-details">
+            <h3>Détails de l'apprenant</h3>
+            <p>Matricule : {{ payement.inscription.eleve.matricule }}</p>
+            <p>Classe : {{ payement.inscription.classe }}</p>
+            <p>Nom complet : {{ payement.inscription.eleve.nom }} {{ payement.inscription.eleve.prenom }}</p>
+        </section>
+        <section class="payment-details">
+            <h3>Détails du Paiement</h3>
+            <table>
+                <tr>
+                    <th>Description</th>
+                    <th>Montant</th>
+                </tr>
+                <tr>
+                    <td>Montant du Paiement</td>
+                    <td>{{ payement.montant }} FCFA</td>
+                </tr>
+                <tr>
+                    <td>Net à Verser </td>
+                    <td>{{ frais }} FCFA</td>
+                </tr>
+                <tr>
+                    <td>Deja Versé</td>
+                    <td>{{ all_paie }} </td>
+                </tr>
+                <tr>
+                    <td>Reste</td>
+                    <td>{{ reste }} </td>
+                </tr>
+            </table>
+        </section>
+        <footer>
+            <span> N.B: Les droits d'inscription et les frais académiques ne sont ni remboursables ni substituables</span>
+            <p>Saisi par {{ payement.utilisateur }}</p>
+            <p>Lycée Fort Lamy</p>
+        </footer>
+    </div>
+</body>
+</html>

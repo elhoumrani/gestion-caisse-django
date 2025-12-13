@@ -1,0 +1,102 @@
+{% extends 'base/base1.html' %}
+{% load static %}
+
+{% block titre %}<title>Formations</title>{% endblock %}
+<style>
+    .edit,
+    .delete {
+        text-decoration: none;
+        color: rgb(31, 29, 29);
+        margin-left: 10px;
+    }
+
+    .edit:hover,
+    .delete:hover {
+        color: #007bff;
+        transition: color 1.5s ease;
+    }
+</style>
+
+{% block ajouter %}
+<a href="{% url 'formation_create' %}"><img src="{% static '/img/Ellipse 1 (2).png' %}"></a>
+{% endblock %}
+
+{% block title %} Classes {% endblock %}
+
+{% block contenu %}
+<div>
+    <input type="search" placeholder="rechercher" style="width: 100%; padding: 12px 8px; border: none; 
+               border-radius: 18px; background-color:lightgray;
+               margin: 25px 0px; font-size: 25px;" id="searchInput">
+</div>
+
+<div class="tab">
+    <table id="formationsTable">
+        <thead>
+            <tr>
+                <th>Niveau</th>
+                <th>libelé</th>
+                <th>Cycle</th>
+                <th>Inscription</th>
+                <th>Scolarite (FCFA)</th>
+                <th>Total</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for list in liste %}
+            <tr>
+                <td>
+                    <a href="{% url 'recalcitrant' id=list.id  %}"
+                        style="text-decoration: none; color: black; cursor: pointer;">
+                        {{ list.niveau }}
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url 'recalcitrant' id=list.id  %}"
+                        style="text-decoration: none; color: black; cursor: pointer;">
+                        {{ list.libele }}
+                    </a>
+                </td>
+                <td>{{ list.cycle }}</td>
+                <td>{{ list.frais_inscription | floatformat:2 }}</td>
+                <td>{{ list.frais_scolarite | floatformat:2 }}</td>
+                <td>{{ list.frais_total | floatformat:2 }}</td>
+                <td>
+                    <a href="{% url 'formation_adit' id=list.id %}" class="edit"><i class="fas fa-edit"></i></a>
+                    /
+                    <a class="delete" href="{% url 'formation_delete' id=list.id %}"><i
+                            class="fas fa-trash-alt"></i></a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('searchInput').addEventListener('keyup', function () {
+            const filter = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#formationsTable tbody tr');
+
+            rows.forEach(row => {
+                const cells = row.getElementsByTagName('td');
+                let rowContainsFilter = false;
+
+                for (let i = 0; i < cells.length; i++) {
+                    if (cells[i].textContent.toLowerCase().includes(filter)) {
+                        rowContainsFilter = true;
+                        break;
+                    }
+                }
+
+                // Afficher toutes les lignes si le champ est vide
+                row.style.display = (filter === '' || rowContainsFilter) ? '' : 'none';
+            });
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,68 @@
+.main  {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: auto;
+   
+}
+
+.forms {
+    display: flex;
+    margin-top: 10px;
+    justify-content: center;
+    box-shadow: 0 1px 8px rgba(0, 0, 0, .5);
+    min-height: 300px;
+    padding: 10px 20px;
+}
+
+.log {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+    margin-top: 30px;
+    margin-bottom: 25px;
+}
+
+
+.forms input {
+    width: 250px;
+    padding: 8px 12px;
+    margin-bottom: 12px;
+    margin-top: 2px;
+    border-radius: 10px;
+    background-color: #f1f1f1;
+    border: 1px solid #f1f1f1 ;
+}
+
+input:focus{
+    outline: 1px solid rgba(52, 54, 135, 1);
+}
+#pwd {
+    margin-left: 4px;
+}
+#email  {
+    margin-left: 4px;
+}
+
+.btn-connecter {
+    padding: 2px 8px;
+    border-radius: 8px;
+    width: 116px;
+    border: 0;
+    padding: 6px;
+    background-color: rgba(52, 54, 135, 1);
+    color: #fff;
+    font-weight: 500;
+}
+
+button:focus {
+    outline: 2px solid rgba(52, 54, 135, 1);
+}
+
+.btn a {
+    text-decoration: none;
+    font-size: 16px;
+    color: rgba(52, 54, 135, 1);
+    padding: 8px;  
+}

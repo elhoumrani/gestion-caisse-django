@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+    <link rel="stylesheet" href="{% static 'css/new_form.css' %}">
+    {% block title  %}<title></title> {% endblock %}
+
+    {% block styles %} {% endblock %}
+
+    <style>
+        /* Ajoutez ceci dans votre fichier dash.css */
+    .items li.active {
+        background-color: #6a81b4; /* Couleur de fond pour l'item actif */
+        color: rgb(25, 24, 24); 
+        border-left: 4px solid #f3f4f6;
+        border-radius: 6px;
+        /* Couleur du texte pour l'item actif */
+        }
+    </style>
+    
+</head>
+<body>
+    
+    <section class="sidebar">
+        <div class="sidebar-head">
+            <img src="{% static '/img/1737195769624.jpg' %}" alt="" >
+            <h3>GesCaisse</h3>
+        </div>
+        <div class="items">
+            {% if request.user.is_admin %}
+            <li id="payment"><a href="{% url 'payment_index' %}">Payement</a></li>
+            <li id="inscription"><a href="{% url 'inscription_index' %}">Inscription</a></li>
+            <li id="eleve"><a href="{% url 'eleve_index' %}">eleve</a></li>
+            <li id="formation"><a href="{% url 'formation_index' %}">classe</a></li>
+            <li id="dashboard"><a href="{% url 'dash_board' %}">dashborad</a></li>
+            {% elif request.user.is_censeur  %}
+            <li id="inscription"><a href="{% url 'inscription_index' %}">Inscription</a></li>
+            <li id="eleve"><a href="{% url 'eleve_index' %}">eleve</a></li>
+            <li id="formation"><a href="{% url 'formation_index' %}">classe</a></li>
+            {% elif request.user.is_caissier  %}
+            <li id="payment"><a href="{% url 'payment_index' %}">Payement</a></li>
+            {% elif request.user.is_information  %}
+
+            {% endif %}
+        </div>
+    </section>
+
+    <section id="main">
+
+        <div class="navbar">
+            <div class="recherche">
+                <h3>GestionCaisse</h3> 
+            </div>
+            <div class="image">
+                <div class="dropdown">
+                    <button class="dropbtn">Menu</button>
+                    <div class="dropdown-content">
+                        <a href="{% url 'account_information'  %}">compte</a>
+                        <a href="{% url 'deconnexion' %}">logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h3 class="titre">New formulaire</h3>
+        
+        <div class="values">
+            {% block contenu %} {% endblock %} 
+            
+        </div>
+        
+    </section>
+
+    {% block scripts %} {% endblock %}
+  
+</body>
+</html>

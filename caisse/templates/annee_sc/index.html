@@ -1,0 +1,81 @@
+{% extends 'base/base1.html' %}
+{% load static %}
+
+{% block titre %}<title>Année Scolaire</title>{% endblock %}
+
+{% block styles %}
+<style>
+    .print-link {
+    text-decoration: none;
+    color: rgb(31, 29, 29);
+    margin-left: 10px;
+    }
+
+    .print-link:hover {
+        color: #007bff;
+        transition: color 0.3s;
+    }
+
+    .edit, .delete {
+            text-decoration: none;
+            color: rgb(31, 29, 29);
+            margin-left: 10px;
+        }
+    .edit:hover, .delete:hover {
+            color: #007bff;
+            transition: color 1.5s ease;
+        }
+</style>
+
+{% endblock %}
+
+
+
+
+    <div class="content">
+
+        
+        {% block ajouter %} 
+            <a href="{% url 'create_year' %}"><img src="{% static '/img/Ellipse 1 (2).png' %}"></a>
+        {% endblock %}
+
+        {% block title %} Année Scolaire {% endblock %}
+        {% block contenu %}  
+            <div class="tab">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>libelé</th>
+                            <th>Date debut</th>
+                            <th>Date de fin</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for list in annee_sc %}
+                        <tr>
+                            <td><a href="{% url 'details_year' id=list.id %}">{{list.libelle}}</a></td>
+                            <td>{{list.date_debut}}</td>
+                            <td>{{ list.date_fin }}</td>
+                            <td>{{list.statut}}</td>
+                            <td>
+                                <a href="{% url 'edit_year' id=list.id %}" class="edit" style="text-decoration: none; cursor: pointer; margin-right: 4px;">
+                                    <i class="fas fa-edit" style="color: black;"></i>
+                                </a> 
+                                <a href="{% url 'delete_year' id=list.id %}" class="delete" style="text-decoration: none; margin-left: 4px;">
+                                    <i class="fas fa-trash-alt" style="color: black;"></i>
+                                </a>
+                               
+                            </td>
+                            
+                        </tr>
+                        {% endfor %}
+                    
+                    </tbody>
+                </table>
+            </div>   
+        {% endblock %}
+        
+    </div>
+

@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block title %} <title></title> {% endblock %}
+    
+    <link rel="stylesheet" href="{% static 'css/acceuil.css' %}">
+</head>
+<body>
+    <div class="content">
+
+      
+        <div class="main-header">
+            {% block texte %} {% endblock %}
+
+            <div class="main-btn">
+                {% block recherche %} {% endblock %}
+                {% block add %} {% endblock
+                     %}
+            </div>
+            <div class="compte">
+                <div class="dropdown">
+                    <button class="dropbtn">Menu</button>
+                    <div class="dropdown-content">
+                        <a href="#mon-compte"><img width="20" height="20" src="{% static 'img/🦆 icon _User Circle_ (1).png' %}" alt=""></a>
+                        <a href="{% url 'deconnexion' %}"><img src="{% static 'img/OIP.png' %}" alt=""></a>
+                    </div>
+                </div>
+            </div> 
+        </div>
+
+        <side class="sidebar">
+            <img class="logo" src="{% static 'img/Group 5.png' %}" width="200" height="77" alt="">
+            <img class="logo-second" src="{% static 'img/Rectangle 16.png' %}" width="200" height="5" alt="">
+            <ul>
+                <li> <img class="img-li" src="{% static 'img/🦆 icon _Dollar Sign_payement.png' %}" width="20" height="20" alt=""><a href="{% url 'acceuilP' %}">Payement</a></li>
+                <li><img class="img-li" src="{% static 'img/🦆 icon _Users_.png' %}" width="20" height="20" alt=""> <a href="{% url 'acceuilE' %}">Eleves</a></li>
+                <li><img class="img-li" src="{% static 'img/Vector (4).png' %}" width="20" height="20" alt=""><a href="{% url 'acceuilF' %}">Classe</a></li>
+            </ul>
+        </side>
+
+        {% block main %} {% endblock %}
+    </div>
+    
+</body>
+</html>

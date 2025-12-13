@@ -1,0 +1,81 @@
+{% extends 'base/base1.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block titre %}<title>Apprenants</title>{% endblock %}
+</head>
+
+<body>
+    <div class="content">
+        {% block ajouter %}
+        <a href="{% url 'eleve_create' %}"><img src="{% static '/img/Ellipse 1 (2).png' %}"></a>
+        {% endblock %}
+
+        {% block title %} Apprenants {% endblock %}
+
+        {% block contenu %}
+        <div>
+            <input type="search" placeholder="rechercher" style="width: 100%; padding: 12px 8px; border: none; 
+               border-radius: 18px; background-color:lightgray;
+               margin: 25px 0px; font-size: 25px;" id="searchInput">
+        </div>
+        <div class="tab">
+            <table id="inscriptionsTable">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nom</th>
+                        <th>Prenom</th>
+                        <th>Date naissance</th>
+                        <th>Sexe</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for list in liste %}
+                    <tr>
+                        <td>{{ list.matricule }}</td>
+                        <td>{{ list.nom }}</td>
+                        <td>{{ list.prenom }}</td>
+                        <td>{{ list.date_naissance }}</td>
+                        <td>{{ list.sexe }}</td>
+                        <td><a href="{% url 'eleve_edit' id=list.id %}"><i class="fas fa-edit"></i></a> / <a
+                                href="{% url 'eleve_delete' id=list.id %}"><i class="fas fa-trash-alt"></i></a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endblock %}
+    </div>
+
+    {% block scripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('searchInput').addEventListener('keyup', function () {
+                const filter = this.value.toLowerCase();
+                const rows = document.querySelectorAll('#inscriptionsTable tbody tr');
+                rows.forEach(row => {
+                    const cells = row.getElementsByTagName('td');
+                    let rowContainsFilter = false;
+
+                    for (let i = 0; i < cells.length; i++) {
+                        if (cells[i].textContent.toLowerCase().includes(filter)) {
+                            rowContainsFilter = true;
+                            break;
+                        }
+                    }
+
+                    row.style.display = (filter === '' || rowContainsFilter) ? '' : 'none';
+                });
+            });
+        });
+    </script>
+    {% endblock %}
+</body>
+
+</html>

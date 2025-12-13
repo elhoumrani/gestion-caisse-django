@@ -1,0 +1,63 @@
+{% extends 'base/baseform.html' %}
+{% load static %}
+
+{% block title %}<title>Ajout</title>{% endblock %}
+
+
+{% block contenu %}
+<div class="container">
+    <div style="text-align: center; margin-bottom: 18px;">Effectuer un Payement</div>
+    <div style="text-align: center; margin-bottom: 18px;">{{ msg }}</div>
+
+    <form action="" method="POST">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            {{ form.inscription.label_tag }}<br>
+            {{ form.inscription }}
+        </div>
+
+        <div class="form-group">
+            {{ form.motif.label_tag }}<br>
+            {{ form.motif }}
+        </div>
+
+        <div class="form-group" id="nombre_mois_group" style="display: none;">
+            <label for="nombre_mois">Nombre de mois</label><br>
+            <input type="number" id="nombre_mois" name="nombre_mois" min="1" value="1">
+        </div>
+        <div class="form-group">
+           {{ form.date_paiement.label_tag }}<br>
+            <div class="champ">{{ form.date_paiement }} </div>
+        </div>
+        <div class="form-group">
+            {{ form.mode_paiement.label_tag }}<br>
+            {{ form.mode_paiement }}
+        </div>
+        <div class="btn">
+            <button type="submit">Ajouter</button>
+            <button type="reset">annuler</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const motifInput = document.getElementById('id_motif');
+        if (motifInput) {
+            motifInput.addEventListener('change', function (event) {
+                const hiddenInput = document.getElementById('nombre_mois_group');
+                if(!hiddenInput) return ;
+                if(event.target.value ==='mensuel'){
+                    hiddenInput.style.display = "block";
+                    return;
+                }
+                hiddenInput.style.display = "none";
+            })
+        }
+
+    })
+</script>
+{% endblock %}

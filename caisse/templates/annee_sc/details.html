@@ -1,0 +1,352 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title></title>
+  <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
+
+  <!-- Fonts and icons -->
+
+
+
+  <!-- CSS Files -->
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/kaiadmin.min.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/dash1.css' %}" />
+
+  <style>
+    .items li.active {
+      background-color: #6a81b4;
+      /* Couleur de fond pour l'item actif */
+      color: rgb(25, 24, 24);
+      border-left: 4px solid #f3f4f6;
+      border-radius: 6px;
+      /* Couleur du texte pour l'item actif */
+    }
+  </style>
+</head>
+
+<body style="background-color: #F5F5F5">
+  <div class="wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar" style="background-color:rgba(75, 77, 160, 1) ;">
+      <div class="sidebar-head">
+        <img src="{% static '/img/1737195769624.jpg' %}" style="width: 45px; height: 45px;" alt="">
+        <h3>GesCaisse</h3>
+      </div>
+      <div class="items">
+        <li id="payment"><a href="{% url 'payment_index' %}">Payement</a></li>
+        <li id="inscription"><a href="{% url 'inscription_index' %}">Inscription</a></li>
+        <li id="eleve"><a href="{% url 'eleve_index' %}">eleve</a></li>
+        <li id="formation"><a href="{% url 'formation_index' %}">classe</a></li>
+        <li id="dashboard"><a href="{% url 'dash_board' %}">dashborad</a></li>
+
+      </div>
+    </div>
+
+    <!-- End Sidebar -->
+
+    <div class="main-panel">
+      <div class="main-header">
+
+        <!-- Navbar Header -->
+        <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
+          <div class="container-fluid">
+            <div class="recherche">
+              <h3 class="fw-bold mb-3">GesCaisse</h3>
+            </div>
+            <div class="image">
+              <div class="dropdown">
+                <button class="dropbtn">Menu</button>
+                <div class="dropdown-content">
+                  <a href="{% url 'account_information' %}">compte</a>
+                  <a href="{% url 'deconnexion' %}">logout</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>
+        <!-- End Navbar -->
+      </div>
+
+      <div class="container">
+        <div class="page-inner">
+          <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+            <div>
+              <h3 class="fw-bold mb-3">Recaptulatif de l'année {{ annee_scolaire }}</h3>
+              <hr style="border: 1px solid black; height: 2px; background-color: black;">
+            </div>
+          </div>
+
+
+          <div class="row">
+            <h2>Statistiques générales</h2>
+            <div class="col-sm-6 col-md-3">
+              <div class="card card-stats card-round" style="background-color: #BBDEFB;">
+                <div class="card-body">
+                  <div class="row align-items-center">
+
+                    <div class="col col-stats ms-3 ms-sm-0">
+                      <div class="numbers">
+                        <p class="card-category" style="font-size: 18px; font-weight: bold;">Nombre total d'inscrits</p>
+                        <h4 class="card-title">{{ total_inscrits }} </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6 col-md-3">
+              <div class="card card-stats card-round" style="background-color: #FFF9C4;">
+                <div class="card-body">
+                  <div class="row align-items-center">
+
+                    <div class="col col-stats ms-3 ms-sm-0">
+                      <div class="numbers">
+                        <p class="card-category" style="font-size: 18px; font-weight: bold;">Boursiers </p>
+                        <h4 class="card-title">{{ total_inscrits_exo }} </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6 col-md-3">
+              <div class="card card-stats card-round" style="background-color: #C8E6C9;">
+                <div class="card-body">
+                  <div class="row align-items-center">
+
+                    <div class="col col-stats ms-3 ms-sm-0">
+                      <div class="numbers">
+                        <p class="card-category" style="font-size: 18px; font-weight: bold;">Regime normale</p>
+                        <h4 class="card-title">{{ total_inscrits_normal }} </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6 col-md-3">
+              <div class="card card-stats card-round" style="background-color: #FFE0B2;">
+                <div class="card-body">
+                  <div class="row align-items-center">
+
+                    <div class="col col-stats ms-3 ms-sm-0">
+                      <div class="numbers">
+                        <p class="card-category" style="font-size: 18px; font-weight: bold;">Revenu total de l'année
+                        </p>
+                        <h4 class="card-title"> {{ revenu_total }} FCFA </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6 col-md-3">
+              <div class="card card-stats card-round" style="background-color: #E1BEE7;">
+                <div class="card-body">
+                  <div class="row align-items-center">
+
+                    <div class="col col-stats ms-3 ms-sm-0">
+                      <div class="numbers">
+                        <p class="card-category" style="font-size: 18px; font-weight: bold;">Somme reçue </p>
+                        <h4 class="card-title"> {{ recu }} FCFA</h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6 col-md-3">
+              <div class="card card-stats card-round" style="background-color: #FFCDD2;">
+                <div class="card-body">
+                  <div class="row align-items-center">
+
+                    <div class="col col-stats ms-3 ms-sm-0">
+                      <div class="numbers">
+                        <p class="card-category" style="font-size: 18px; font-weight: bold;"> Reste à payer </p>
+                        <h4 class="card-title"> {{ reste }} FCFA </h4>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row">
+            <div
+              style="width: 350px; height: 50px; margin-left: 20px; margin-bottom: 12px; border-radius: 12px; background-color: #D32F2F; ">
+              <p style="font-size: 18px; font-weight: bold; color: white; padding: 8px;">Retard de payement </p>
+            </div>
+            <div class="col-md-12">
+              <div class="card card-round">
+                <div class="card-header">
+                  <div class="card-head-row card-tools-still-right">
+
+                  </div>
+                </div>
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <!-- Projects table -->
+                    <table class="table align-items-center mb-0">
+                      <thead class="thead-light">
+                        <tr>
+                          <th scope="col">Classe</th>
+                          <th scope="col">Elève</th>
+                          <th scope="col">Frais</th>
+                          <th scope="col">Reçu</th>
+                          <th scope="col">Reste</th>
+                          <th scope="col">Contact parent</th>
+                          <th scope="col">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for i in eleve_irregulier %}
+                        <tr>
+                          <td scope="row">
+                            {{i.inscrit.classe.libele}}
+                          </td>
+                          <td scope="row">{{ i.inscrit.eleve }}</td>
+                          <td>
+                            <span>{{ i.inscrit.classe.frais_total|floatformat:2 }}</span>
+                          </td>
+                          <td>{{ i.paie }}</td>
+                          <td>{{ i.reste_paie|floatformat:2 }}</td>
+                          <td>{{ i.inscrit.eleve.parent_contact}}</td>
+                          <td>
+                            <a href="{% url 'regler_paye' id=i.inscrit.id %}">Payer</a>
+                          </td>
+
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+
+            <div
+              style="width: 350px; height: 50px;  margin-left: 20px; margin-bottom: 12px; border-radius: 12px; background-color: #3a49f0; ">
+              <p style="font-size: 18px; font-weight: bold; color: white; padding: 8px;">Toutes les inscriptions</p>
+            </div>
+            <div>
+              <input type="search" placeholder="rechercher" style="width: 100%; padding: 12px 8px; border: none; 
+               border-radius: 18px; background-color:lightgray;
+               margin: 25px 0px; font-size: 25px;" id="searchInput">
+            </div>
+            <div class="col-md-12">
+              <div class="card card-round">
+                <div class="card-header">
+                  <div class="card-head-row card-tools-still-right">
+
+                  </div>
+                </div>
+                <div class="card-body p-0">
+                  <div class="table-responsive">
+                    <!-- Projects table -->
+                    <table class="table align-items-center mb-0" id="inscriptionsTable">
+                      <thead class="thead-light">
+                        <tr>
+                          <th scope="col">Classe</th>
+                          <th scope="col">Elève</th>
+                          <th scope="col">Regime</th>
+                          <th scope="col">statut</th>
+
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for i in inscriptions %}
+                        <tr>
+                          <td scope="row">
+                            {{i.classe.libele}}
+                          </td>
+                          <td scope="row">{{ i.eleve }}</td>
+                          <td>
+                            <span>{{ i.regime}}</span>
+                          </td>
+                          <td>{{ i.statut }}</td>
+
+                        </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const items = document.querySelectorAll('.items li');
+
+        items.forEach(item => {
+          item.addEventListener('click', function () {
+            // Retirer la classe active de tous les items
+            items.forEach(i => i.classList.remove('active'));
+
+            // Ajouter la classe active à l'item cliqué
+            this.classList.add('active');
+          });
+        });
+
+        // Optionnel: Ajouter la classe active à l'item correspondant à la page actuelle
+        const currentPage = window.location.pathname;
+        items.forEach(item => {
+          const link = item.querySelector('a').getAttribute('href');
+          if (link === currentPage) {
+            item.classList.add('active');
+          }
+        });
+      });
+
+      document.getElementById('searchInput').addEventListener('keyup', function () {
+        const filter = this.value.toLowerCase();
+        const rows = document.querySelectorAll('#inscriptionsTable tbody tr');
+
+        rows.forEach(row => {
+          const cells = row.getElementsByTagName('td');
+          let rowContainsFilter = false;
+
+          for (let i = 0; i < cells.length; i++) {
+            if (cells[i].textContent.toLowerCase().includes(filter)) {
+              rowContainsFilter = true;
+              break;
+            }
+          }
+
+          // Afficher toutes les lignes si le champ est vide
+          if (filter === '' || rowContainsFilter) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
+        });
+      });
+
+    </script>
+</body>
+
+</html>

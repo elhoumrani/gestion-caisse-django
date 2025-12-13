@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <title>Login</title>
+</head>
+
+
+<body>
+  
+        <div class="main">
+            <div class="forms">
+                    <form  method="POST">
+                        {% csrf_token %}
+                        <div class="log">Login</div>
+                        
+                        <p>{{ msg }}</p>
+                        <div class="email">
+                            <input type="text" name="username" placeholder="entrez votre nom">
+                        </div>
+                        <div class="password">
+                            <input type="password" name="password" placeholder="******************">
+                        </div>
+                        <div class="btn">
+                            <button class="btn-connecter">Se connecter</button>
+                            <a href="{% url 'forgot_pwd' %}">Mot de passe oublié ?</a>
+                        </div>
+                      
+                    </form>
+            </div>
+        </div>
+ 
+</body>
+</html>

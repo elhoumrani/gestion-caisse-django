@@ -1,0 +1,96 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>compte</title>
+
+    <style>
+        .container {
+            display: flex;
+            justify-items: center;
+            justify-content: center;
+            align-items: center;
+            padding-top: 20px;
+        }
+
+        .card {
+            margin-top: 70px;
+            background-color: #f3f4f6;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 550px;
+            border: 1px solid #ccc;
+        }
+
+        .title-card {
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 18px;
+        }
+
+        .body-card {
+            padding: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .body-card a {
+            text-decoration: none;
+            color: blue;
+        }
+
+        button {
+            width: 250px;
+            height: 45px;
+            margin-top: 12px;
+            border-radius: 12px;
+            border: none;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            font-size: 1.5em;
+        }
+
+        img {
+            width: 100px;
+            height: 100px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="card">
+            <div class="title-card">
+                <h1>Bienvenue <strong> {{ nom }} </strong></h1>
+                <img src="{% static '/img/connexion-removebg-preview.png' %}" alt="" style="width: 80px; height: 80px;">
+            </div>
+            <div class="body-card">
+                <span> <strong style="color: blue; font-size: 20px; font-weight: bold;">{{ operation }} </strong>
+                    operations effectuées , vous etes un hero !!!</span>
+                <hr>
+                <p style="text-align: center;"> {{ email }} | <a href="{% url 'edit_profil' %}">Modifier mes infos</a>
+                </p>
+                <p>
+
+                    <a href="{% url 'payment_index' %}">
+                        <img src="{% static '/img/acceuil-removebg-preview.png' %}" alt="">
+                    </a>
+
+                </p>
+
+            </div>
+        </div>
+
+
+
+    </div>
+
+</body>
+
+</html>

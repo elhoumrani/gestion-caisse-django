@@ -1,0 +1,63 @@
+{% extends 'base/baseform.html' %}
+{% load static %}
+
+
+
+    {% block title  %}<title>Ajouter</title> {% endblock %}
+
+    
+        {% block contenu %}
+        <div class="container">
+            <h4 style="text-align: center;">Editer une formation</h4>
+
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <div style="text-align: center;">{{ field.label }} : {{ error }}</div>
+                {% endfor %}
+            {% endfor %}
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    {{ form.niveau.label_tag }}<br>
+                     {{ form.niveau }}
+                 </div>
+         
+                 <div class="form-group">
+                    {{ form.libele.label_tag }}<br>
+                     {{ form.libele }}
+                 </div>
+         
+                 <div class="form-group">
+                    {{ form.cycle.label_tag }}<br>
+                     {{ form.cycle }}
+                 </div>
+         
+                 <div class="form-group">
+                    {{ form.frais_inscription.label_tag }}<br>
+                     {{ form.frais_inscription }}
+                 </div>
+                 <div class="form-group">
+                    {{ form.mensualite.label_tag }}<br>
+                     {{ form.mensualite }}
+                 </div>
+                 <div class="form-group">
+                     {{ form.tranche1.label_tag }}<br>
+                     {{ form.tranche1 }}
+                 </div>
+                 <div class="form-group">
+                    {{ form.tranche2.label_tag }}<br>
+                     {{ form.tranche2 }}
+                 </div>
+                 <div class="form-group">
+                     {{ form.tranche3.label_tag }}<br>
+                     {{ form.tranche3 }}
+                 </div>
+                <div class="btn">
+                    <button type="submit">Ajouter</button>
+                    <button type="reset">annuler</button>
+                </div>
+            </form>
+        </div>
+
+        {% endblock %} 
+

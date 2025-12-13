@@ -1,0 +1,36 @@
+{% extends 'base/baseform.html' %}
+{% load static %}
+
+
+
+    {% block title  %}<title>Ajouter année</title> {% endblock %}
+
+        {% block contenu %}
+            <div class="container">
+                <h4 style="text-align: center;">Enregister une nouvelle Année</h4>
+                <form method="post">
+                    
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{form.libelle.label_tag}} <br>
+                        {{form.libelle}}    
+                    </div>
+                    <div class="form-group">
+                        {{form.date_debut.label_tag}} <br>
+                        {{form.date_debut}}
+                    </div>
+                    <div class="form-group">
+                        {{form.date_fin.label_tag}} <br>
+                        {{form.date_fin}}   
+                    </div>
+                    <div class="btn">
+                        <button type="submit">Ajouter</button>
+                        <button type="reset">annuler</button>
+                    </div>
+                </form>
+            </div>
+        {% endblock %}
+    </section>
+  
+</body>
+</html>

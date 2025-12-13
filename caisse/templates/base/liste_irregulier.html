@@ -1,0 +1,120 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Tableau des Apprenants</title>
+    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
+
+    <!-- CSS Files -->
+
+    <!-- Custom CSS for the table -->
+    <style>
+        body {
+            font-family: 'Public Sans', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .wrapper {
+            padding: 20px;
+        }
+        .card-round {
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            color: black;
+            border-radius: 15px 15px 0 0;
+            padding: 15px;
+            margin-bottom: 8px;
+        }
+        .card-title {
+            margin: 0;
+            font-size: 1.5em;
+        }
+        .table {
+            width: 100%;
+            margin-bottom: 1rem;
+            color: #212529;
+            border-collapse: collapse;
+            font-size: 18px;
+        }
+        .table thead th {
+            background-color: rgba(75, 77, 160, 1);
+            color: white;
+            border-bottom: 2px solid #dee2e6;
+            padding: 12px;
+            text-align: left;
+        }
+        .table tbody tr {
+            border-bottom: 1px solid #dee2e6;
+        }
+        .table tbody tr:nth-child(odd) {
+            background-color: #f8f9fa;
+        }
+        .table tbody tr:hover {
+            background-color: #e9ecef;
+        }
+        .table td, .table th {
+            padding: 12px;
+            vertical-align: top;
+        }
+        .table td {
+            color: #495057;
+        }
+        .table td span {
+            font-weight: bold;
+            color: #aa215ad0;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="main-panel">
+            <div class="container">
+                <div class="page-inner">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card card-round">
+                                <div class="card-header">
+                                    <div class="card-head-row card-tools-still-right">
+                                        <div class="card-title"><h4>Eleves de {{ classe }} </h3></div> 
+                                    </div>
+                                </div>
+                                <div class="card-body p-0">
+                                    <div class="table-responsive">
+                                        <!-- Projects table -->
+                                        <table class="table align-items-center mb-0">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th scope="col">Apprenant</th>
+                                                    <th scope="col">Net à verser</th>
+                                                    <th scope="col">Reçu</th>
+                                                    <th scope="col">Reste</th>
+                                                    <th scope="col">Statut</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for i in recals %}
+                                                <tr>
+                                                    <td scope="row">{{ i.inscrits.eleve }}</td>
+                                                    <td>{{ i.inscrits.classe.frais_scolarite }}</td>
+                                                    <td scope="row">{{ i.paye }}</td>
+                                                    <td><span>{{ i.reste }}</span></td>
+                                                    <td>{{ i.inscrits.statut }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

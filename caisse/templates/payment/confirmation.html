@@ -1,0 +1,54 @@
+{% extends 'base/baseform.html' %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block titre %}<title>Ajout</title>{% endblock %}
+</head>
+<body>
+<div class="content">
+    
+        {% block contenu %}
+        <div class="forms">
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div style="text-align: center; margin-bottom: 18px;">Valider le Payement</div>
+                <div class="form-group">
+                    <label for="montant">Inscription :</label><br>
+                    <input type="text" id="montant" name="montant" value="{{ inscription }}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="montant">Motif :</label><br>
+                    <input type="text" id="montant" name="montant" value="{{ payment_data.motif }}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="montant">Montant :</label><br>
+                    <input type="text" id="montant" name="montant" value="{{ payment_data.montant }}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="montant">Mode de paiement :</label><br>
+                    <input type="text" id="montant" name="montant" value="{{ payment_data.mode_paiement }}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="montant">Operatuer de saisi :</label><br>
+                    <input type="text" id="montant" name="montant" value="{{ utilisateur }}" readonly>
+                </div>
+                <div class="btn">
+                    <button type="submit" class="ajout">Ajouter</button>
+                    <button type="reset" class="annuler">
+                        <a href="{% url 'payment_index' %}" style="text-decoration: none; color: white;">
+                            annuler
+                        </a>
+                </button>
+                </div>
+            </form>
+        </div>
+        {% endblock %} 
+    </main>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,60 @@
+{% extends 'base/baseform.html' %}
+{% load static %}
+
+
+{% block contenu %}
+<div class="container">
+    <h4 style="text-align: center;">Editer apprenant</h4>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.nom.label_tag }}<br>
+            {{ form.nom }}
+        </div>
+
+        <div class="form-group">
+           {{ form.prenom.label_tag }}<br>
+            {{ form.prenom }}
+        </div>
+
+        <div class="form-group">
+           {{ form.date_naissance.label_tag }}<br>
+            {% if msg %}
+            <div style= " text-align: center; background-color: #fff3cd;  color: #856404; padding: 5px;margin-bottom: 20px; margin-top: 12px;">
+                {{ msg }}
+            </div>
+            {% endif %}
+            {{ form.date_naissance }}
+        </div>
+
+        <div class="form-group">
+            {{ form.sexe.label_tag }}</label><br>
+            {{ form.sexe }}
+        </div><br>
+        <div class="form-group">
+            {{ form.email.label_tag }}<br>
+            {{ form.email }}
+        </div><br>
+        <div class="form-group">
+            {{ form.parent_contact.label }}</label><br>
+            {{ form.parent_contact }}
+        </div><br>
+        <div class="form-group">
+            {{ form.address.label_tag }}</label><br>
+            {{ form.address }}
+        </div>
+        <div class="btn">
+            <button type="submit">Ajouter</button>
+            <button type="reset">
+                <a href="{% url 'eleve_index' %}" style="text-decoration: none; color: white; cursor: pointer;" > 
+                    annuler
+                </a>
+            </button>
+        </div>
+    </form>
+</div>
+
+{% endblock %} 
+    
+
+

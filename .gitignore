@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+
+# Environnement virtuel
+venv/
+env/
+myespace/
+
+# Django
+*.sqlite3
+media/
+staticfiles/
+
+# Environnement
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
+Desktop.ini

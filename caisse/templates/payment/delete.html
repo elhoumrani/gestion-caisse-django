@@ -1,0 +1,36 @@
+{% extends 'base/baseform.html' %}
+{% load static %}
+
+{% block title %}<title>Supprimer</title>{% endblock %}
+
+
+{% block contenu %}
+<div class="container">
+    <div style="text-align: left;">Etes-vous sur de supprimer le payement de  <strong>{{ payment.inscription }} ?</strong> 
+        Cette operation est irreversible. Si oui, preciser le motif de la suppression.
+    </div>
+    <div style="text-align: center; margin-bottom: 18px;">{{ msg }}</div>
+
+        <form action="{% url 'payment_delete' id=payment.id %}" method="POST">
+            {% csrf_token %}
+            
+            <div class="form-group">
+              {{ form.motif_edition.label_tag }}<br>
+                {{ form.motif_edition }}
+            </div>
+        <div class="btn">
+            <button type="submit">supprimer</button>
+            <button type="reset">
+                <a href="{% url 'payment_index' %}"  style="text-decoration: none; color: white; cursor: pointer;">
+                    annuler
+                </a>
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+
+
+    
+ 

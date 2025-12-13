@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mot de passe oublié</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        input {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 20px;
+            margin-left: 6px;
+            margin-right: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: rgba(75, 77, 160, 1);
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        label {
+        text-align: left;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h4>Ajouter un nouveau user</h4>
+        {% if msg %}
+            <p style="color: red; text-align: center;">{{ msg }}</p>
+        {% endif %}
+        <form action="" method="post">
+            {% csrf_token %}    
+            <label for="password" style="margin-bottom: 2px ;">Username</label><br>
+            {{ form.username }}<br>
+            <label for="confirm_pwd" style="margin-bottom: 2px ;">E-mail</label><br>
+            {{ form.email }} <br>
+            <label for="confirm_pwd" style="margin-bottom: 2px ;">Mot de passe</label><br>
+            {{ form.password1 }}<br>
+            <label for="confirm_pwd" style="margin-bottom: 2px ;">Confirmez le mot de passe</label><br>
+            {{ form.password2 }}
+            <div>
+                <button type="submit">Valider</button>
+                <button><a href="{% url 'list_users' %}" style="text-decoration: none; color: white;">
+                    Retour
+                </a></button>
+            </div>
+            
+        </form>
+    </div>
+</body>
+</html>

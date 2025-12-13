@@ -1,0 +1,43 @@
+{% extends 'base/baseform.html' %}
+{% load static %}
+
+
+
+    {% block title  %}<title>Ajouter année</title> {% endblock %}
+
+        {% block contenu %}
+            <div class="container">
+                <h4 style="text-align: center;">Modifier l'année scolaire</h4>
+                {% if msg %}
+                <p style="color: rgb(240, 54, 54); margin: 4px; text-align: center;">{{ msg }}</p>
+                {% endif %}
+                <form method="post">
+                    
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{form.libelle.label_tag}} <br>
+                        {{form.libelle}}    
+                    </div>
+                    <div class="form-group">
+                        {{form.date_debut.label_tag}} <br>
+                        {{form.date_debut}}
+                    </div>
+                    <div class="form-group">
+                        {{form.date_fin.label_tag}} <br>
+                        {{form.date_fin}}   
+                    </div>
+                    <div class="btn">
+                        <button type="submit">Modifier</button>
+                        <button type="reset">
+                            <a href="{% url 'index_year' %}" style="text-decoration: none; color: white; cursor: pointer;">
+                                annuler
+                            </a>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        {% endblock %}
+    </section>
+  
+</body>
+</html>
