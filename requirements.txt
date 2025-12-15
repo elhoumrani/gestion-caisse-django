@@ -11,3 +11,4 @@ python-dotenv==1.2.1
 six==1.17.0
 sqlparse==0.5.4
 tzdata==2025.3
+wkhtmltopdf==0.2
