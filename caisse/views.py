@@ -354,7 +354,8 @@ def generate_pdf(request, id):
     context = {'payement': payement , "all_paie": all_paie, "frais":frais, 'reste': reste}
 
     html = render_to_string('base/reçu.html', context )
-    config = pdfkit.configuration(wkhtmltopdf="C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe")
+    config = pdfkit.configuration()
+    #wkhtmltopdf="C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe"
     pdf = pdfkit.from_string(html, False, configuration=config)
     response = HttpResponse(pdf, content_type='application/pdf')
     response['Content-Disposition'] = 'inline; filename="document.pdf"'
