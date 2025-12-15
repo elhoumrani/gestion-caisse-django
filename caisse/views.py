@@ -355,6 +355,7 @@ def generate_pdf(request, id):
 
     html = render_to_string('base/reçu.html', context )
     config = pdfkit.configuration()
+    pdfkit.from_url("hey!", "output.pdf", configuration=config)
     #wkhtmltopdf="C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe"
     pdf = pdfkit.from_string(html, False, configuration=config)
     response = HttpResponse(pdf, content_type='application/pdf')

@@ -39,7 +39,9 @@ import pdfkit
 # Spécifiez le chemin vers wkhtmltopdf
 # Ajoutez la configuration à pdfkit
 config = pdfkit.configuration()
+# utilisera l’exécutable installé par aptfile
 
+pdfkit.from_url("hey!", "output.pdf", configuration=config)
 
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
