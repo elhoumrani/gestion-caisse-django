@@ -1,0 +1,13 @@
+asgiref==3.11.0
+Django==6.0
+django-phonenumber-field==8.4.0
+et_xmlfile==2.0.0
+mysqlclient==2.2.7
+openpyxl==3.1.5
+pdfkit==1.0.0
+phonenumbers==9.0.20
+python-dateutil==2.9.0.post0
+python-dotenv==1.2.1
+six==1.17.0
+sqlparse==0.5.4
+tzdata==2025.3
