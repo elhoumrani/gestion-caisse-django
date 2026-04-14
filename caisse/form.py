@@ -1,11 +1,9 @@
 from caisse.models import *
-
 from django import forms
-from .models import School_year
 
 class AnneeScolaireForm(forms.ModelForm):
     class Meta:
-        model = School_year
+        model = Annee_Scolaire
         fields = ['libelle', 'date_debut', 'date_fin']
         
         labels = {
@@ -20,20 +18,16 @@ class AnneeScolaireForm(forms.ModelForm):
         }
 
 
-class FormationForm(forms.ModelForm):
+class ClasseForm(forms.ModelForm):
     class Meta:
-        model = Formation
+        model = Classe
 
-        fields = ['niveau', 'libele', 'cycle','frais_inscription', 'mensualite', 'nbre_mois']
+        fields = ['niveau', 'libele', 'cycle',]
 
         labels = {
             'niveau': 'Niveau',
             'libele': 'Libelé',
             'cycle': 'Cycle',
-            'frais_inscription': 'Frais inscription',
-            'mensualite': 'Mensualité',
-            'nbre_mois': 'Nombre mois',
-        
             }
         
         widgets = {
@@ -51,8 +45,6 @@ class FormationForm(forms.ModelForm):
                 attrs={
                     'placeholder': 'choisir le cycle ',
                     'class': 'form-control'}),
-        
-            "montant": forms.NumberInput(attrs={'min': 0}),
 
                     }
 
@@ -60,16 +52,16 @@ class FormationForm(forms.ModelForm):
 
 class EleveForm(forms.ModelForm):
     class Meta:
-        model = Student
+        model = Eleve
 
-        fields = ['nom', 'prenom', 'date_naissance', 'sexe', 'address', 'parent_contact', 'email']
+        fields = ['nom', 'prenom', 'date_naissance', 'sexe', 'localisation', 'parent_contact', 'email']
 
         labels ={
             'nom' : 'Nom',
             'prenom' : 'Prenom',
             'date_naissance' : 'Date de naissance',
             'sexe' : 'Sexe',
-            'address' : 'Adresse',
+            'localisation' : 'Localisation',
             'parent_contact' : 'Contact Parent',
             'email' : 'Email',
             }
@@ -111,55 +103,137 @@ class InscriptionForm(forms.ModelForm):
             
             }
         
-
-class PaiementForm(forms.ModelForm):
+class TypeFraisForm(forms.ModelForm):
     class Meta:
-        model = Payment
-        fields = ['inscription', 'motif', 'mode_paiement']
-        
+        model = TypeFrais
+
+        fields = ['nom', 'montant', 'ordre']
+
+        labels = {
+            'nom': 'Nom du frais',
+            'montant': 'Montant (FCFA)',
+            'ordre': 'Ordre d\'affichage',
+            
+        }
+
+        widgets = {
+            'montant': forms.NumberInput(attrs={'min': 0}),
+        }
+
+class FraisInscriptionForm(forms.ModelForm):
+    class Meta:
+        model = FraisInscription
+
+        fields = ['inscription', 'type_frais', 'remise', 'motif_remise',]
 
         labels = {
             'inscription': 'Inscription',
-            'motif': 'Motif',
-            'montant': 'Montant (FCFA)',
-            'mode_paiement': 'Mode de Paiement',
+            'type_frais': 'Type de frais',
+            'remise': 'Remise (FCFA)',
+            'motif_remise': 'Motif de remise',
+            
         }
-        
+
         widgets = {
-            'montant': forms.NumberInput(attrs={'min': 0}),
+            'montant_total': forms.NumberInput(attrs={'min': 0}),
+            'remise': forms.NumberInput(attrs={'min': 0}),
+            'montant_du': forms.NumberInput(attrs={'min': 0}),
         }
+
+class FraisInscription_UpdateForm(forms.ModelForm):
+    class Meta:
+        model = FraisInscription
+        fields = [
+            "type_frais",
+            "montant_total",
+            "remise",
+            "montant_du",
+            "motif_remise"
+        ]
 
     def __init__(self, *args, **kwargs):
-        super(PaiementForm, self).__init__(*args, **kwargs)
-        # Filtrer les inscriptions pour n'afficher que celles avec le régime 'normal'
-        self.fields['inscription'].queryset = Inscription.objects.all().exclude(statut='Terminé')
+        super().__init__(*args, **kwargs)
 
-class PaiementForm2(forms.ModelForm):
+        # Champs non modifiables côté UX
+        self.fields["type_frais"].disabled = True
+        self.fields["montant_total"].disabled = True
+        self.fields["montant_du"].disabled = True
+
+    def clean(self):
+        cleaned = super().clean()
+
+        remise = cleaned.get("remise") or Decimal("0")
+        motif = cleaned.get("motif_remise")
+
+        montant_total = self.instance.montant_total
+        ancien_montant_du = self.instance.montant_du
+        ancienne_remise = self.instance.remise or Decimal("0")
+
+        # Si remise modifiée → motif obligatoire
+        if self.instance.pk:
+            nouvelle_remise = remise or Decimal("0")
+
+            if nouvelle_remise != ancienne_remise and not motif:
+                self.add_error(
+                    "motif_remise",
+                    "Le motif est obligatoire lorsqu'une remise est modifiée."
+                )
+
+        # Calcul du nouveau montant dû
+        nouveau_montant_du = montant_total - remise
+
+        if nouveau_montant_du < 0:
+            raise forms.ValidationError(
+                "La remise ne peut pas être supérieure au montant total."
+            )
+
+        # Mise à jour du montant dû dans les données nettoyées
+        cleaned["montant_du"] = nouveau_montant_du
+
+        # verification que le montant du ne peut pas être augmenté après encaissement
+        if nouveau_montant_du > ancien_montant_du:
+            raise forms.ValidationError(
+                "Impossible d’augmenter le montant dû après encaissement."
+            )
+
+        return cleaned
+
+class PaiementGlobalForm(forms.Form):
+    inscription = forms.ModelChoiceField(
+        queryset=Inscription.objects.all(),
+        label="Inscription"
+    )
+    montant = forms.DecimalField(
+        min_value=1,
+        label="Montant payement (FCFA)" 
+    )
+ 
+
+class PaiementForm(forms.ModelForm):
     class Meta:
-        model = Payment
-        fields = ['motif', 'mode_paiement']
+        model = Payement
+        fields = ['frais_inscription', 'montant']
         
 
         labels = {
-            'motif': 'Motif',
+            'frais_inscription': 'Frais inscription',
             'montant': 'Montant (FCFA)',
-            'mode_paiement': 'Mode de Paiement',
         }
         
         widgets = {
             'montant': forms.NumberInput(attrs={'min': 0}),
         }
 
+    
 
-
-class Archive_paie_Form(forms.ModelForm):
-    class Meta:
-        model = Archive_Payment
-        fields = ['motif_edition']
-        motif_edition = forms.CharField(
-        label="Motif de suppression",
-        max_length=200,
-        widget=forms.Textarea(attrs={'rows': 3, 'cols': 40}),
+class AnnulationPaiementForm(forms.Form):
+    motif = forms.CharField(
+        label="Motif de l’annulation",
+        widget=forms.Textarea(attrs={
+            "class": "form-control",
+            "rows": 3,
+            "placeholder": "Expliquez la raison de l'annulation"
+        }),
         required=True
     )
 

@@ -1,32 +1,48 @@
 {% extends 'base/baseform.html' %}
 {% load static %}
 
-{% block title %}<title>Supprimer</title>{% endblock %}
+{% block title %}<title>Annuler</title>{% endblock %}
 
 
 {% block contenu %}
-<div class="container">
-    <div style="text-align: left;">Etes-vous sur de supprimer le payement de  <strong>{{ payment.inscription }} ?</strong> 
-        Cette operation est irreversible. Si oui, preciser le motif de la suppression.
-    </div>
-    <div style="text-align: center; margin-bottom: 18px;">{{ msg }}</div>
+<div class="container mt-4">
 
-        <form action="{% url 'payment_delete' id=payment.id %}" method="POST">
-            {% csrf_token %}
-            
-            <div class="form-group">
-              {{ form.motif_edition.label_tag }}<br>
-                {{ form.motif_edition }}
-            </div>
-        <div class="btn">
-            <button type="submit">supprimer</button>
-            <button type="reset">
-                <a href="{% url 'payment_index' %}"  style="text-decoration: none; color: white; cursor: pointer;">
-                    annuler
-                </a>
+    <h4 class="mb-3 text-danger">
+        Annulation du paiement #{{ paiement.id }}
+    </h4>
+
+    <div class="alert alert-warning">
+        ⚠️ Cette action est définitive et sera enregistrée dans le journal d’audit.
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label for="id_motif" class="form-label">
+                Motif de l’annulation <span class="text-danger">*</span>
+            </label>
+
+            {{ form.motif }}
+
+            {% if form.motif.errors %}
+                <div class="text-danger mt-1">
+                    {{ form.motif.errors }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-danger">
+                Confirmer l’annulation
             </button>
+
+            <a href="{% url 'payment_index' %}" class="btn btn-secondary">
+                Retour
+            </a>
         </div>
     </form>
+
 </div>
 {% endblock %}
 

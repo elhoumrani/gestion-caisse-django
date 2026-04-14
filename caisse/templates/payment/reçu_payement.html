@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Reçu de paiement</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 13px;
+            margin: 30px;
+            color: #000;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 2px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .section {
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #000;
+            padding: 6px;
+            text-align: left;
+        }
+
+        th {
+            background: #f0f0f0;
+        }
+
+        .resume {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        
+
+        .no-print {
+            margin-top: 20px;
+        }
+
+        @media print {
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="header">
+    <h1>ÉTABLISSEMENT XYZ</h1>
+    <p>Tél : 66 00 00 00 | Année scolaire : {{ paiement.frais_inscription.inscription.annee_scolaire }}</p>
+</div>
+
+<div class="section">
+    <strong>REÇU DE PAIEMENT</strong><br>
+    N° : {{ paiement.numero_recu }}<br>
+    Date : {{ paiement.date_paiement }}<br>
+    Caissier : {{ paiement.utilisateur }}
+</div>
+
+<div class="section">
+    <strong>ÉLÈVE</strong><br>
+    Matricule : {{ paiement.frais_inscription.inscription.eleve.matricule }}<br>
+    Nom : {{ paiement.frais_inscription.inscription.eleve }}<br>
+    Classe : {{ paiement.frais_inscription.inscription.classe }}
+</div>
+
+<div class="section">
+    <table>
+        <thead>
+            <tr>
+                <th>Type de frais</th>
+                <th>Montant total</th>
+                <th>Remise</th>
+                <th>Payé</th>
+                <th>Reste</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ paiement.frais_inscription.type_frais.nom }}</td>
+                <td>{{ paiement.frais_inscription.montant_total }}</td>
+                <td>{{ paiement.frais_inscription.remise }}</td>
+                <td>{{ paiement.montant }}</td>
+                <td>{{ paiement.frais_inscription.montant_du }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="resume">
+    Montant payé : {{ paiement.montant }} FCFA
+</div>
+
+<div class="footer" style="margin-top: 20px; margin-bottom: 150px;">
+    <div>Signature caissier</div>
+</div>
+
+<p style="border-bottom: 2px solid #000; scroll-padding-bottom: 10px;"></p>
+
+<div class="header">
+    <h1>ÉTABLISSEMENT XYZ</h1>
+    <p>Tél : 66 00 00 00 | Année scolaire : {{ paiement.frais_inscription.inscription.annee_scolaire }}</p>
+</div>
+
+<div class="section">
+    <strong>REÇU DE PAIEMENT</strong><br>
+    N° : {{ paiement.numero_recu }}<br>
+    Date : {{ paiement.date_paiement }}<br>
+    Caissier : {{ paiement.utilisateur }}
+</div>
+
+<div class="section">
+    <strong>ÉLÈVE</strong><br>
+    Matricule : {{ paiement.frais_inscription.inscription.eleve.matricule }}<br>
+    Nom : {{ paiement.frais_inscription.inscription.eleve }}<br>
+    Classe : {{ paiement.frais_inscription.inscription.classe }}
+</div>
+
+<div class="section">
+    <table>
+        <thead>
+            <tr>
+                <th>Type de frais</th>
+                <th>Montant total</th>
+                <th>Remise</th>
+                <th>Payé</th>
+                <th>Reste</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ paiement.frais_inscription.type_frais.nom }}</td>
+                <td>{{ paiement.frais_inscription.montant_total }}</td>
+                <td>{{ paiement.frais_inscription.remise }}</td>
+                <td>{{ paiement.montant }}</td>
+                <td>{{ paiement.frais_inscription.montant_du }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="resume">
+    Montant payé : {{ paiement.montant }} FCFA
+</div>
+
+<div class="footer">
+    <div>Signature caissier</div>
+    <div>Cachet</div>
+</div>
+
+<div class="no-print">
+    <button onclick="window.print()">Imprimer</button>
+</div>
+
+</body>
+</html>

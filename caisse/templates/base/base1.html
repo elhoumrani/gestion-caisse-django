@@ -1,102 +1,115 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% block titre %} {% endblock %}
+    <title>{% block titre_page %}GesCaisse{% endblock %}</title>
+    
     <link rel="stylesheet" href="{% static 'css/dash.css' %}">
-    <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
     {% block styles %} {% endblock %}
-
-    <style>
-        /* Ajoutez ceci dans votre fichier dash.css */
-    .items li.active {
-        background-color: #6a81b4; /* Couleur de fond pour l'item actif */
-        color: rgb(25, 24, 24); 
-        border-left: 4px solid #f3f4f6;
-        border-radius: 6px;
-        /* Couleur du texte pour l'item actif */
-        }
-    </style>
 </head>
 <body>
     
-    <section class="sidebar">
+    <aside class="sidebar" id="sidebar">
         <div class="sidebar-head">
-            <img src="{% static '/img/1737195769624.jpg' %}" alt="" >
+            <div class="logo-placeholder">
+                <img src="{% static '/img/1737195769624.jpg' %}" alt="Logo" onerror="this.style.display='none'">
+            </div>
             <h3>GesCaisse</h3>
         </div>
-        <div class="items">
-            {% if request.user.is_admin %}
-            <li id="payment"><a href="{% url 'payment_index' %}">Payement</a></li>
-            <li id="inscription"><a href="{% url 'inscription_index' %}">Inscription</a></li>
-            <li id="eleve"><a href="{% url 'eleve_index' %}">eleve</a></li>
-            <li id="formation"><a href="{% url 'formation_index' %}">classe</a></li>
-            <li id="dashboard"><a href="{% url 'dash_board' %}">dashborad</a></li>
-            {% elif request.user.is_censeur  %}
-            <li id="inscription"><a href="{% url 'inscription_index' %}">Inscription</a></li>
-            <li id="eleve"><a href="{% url 'eleve_index' %}">eleve</a></li>
-            <li id="formation"><a href="{% url 'formation_index' %}">classe</a></li>
-            {% elif request.user.is_caissier  %}
-            <li id="payment"><a href="{% url 'payment_index' %}">Payement</a></li>
-            {% endif %}
-        </div>
-    </section>
+        <nav class="items">
+            <ul>
+                {% if request.user.role == "PROVISEUR" %}
+                    <li><a href="{% url 'dash_board' %}">Dashboard</a></li>
+                    <li><a href="{% url 'payment_index' %}">Suivi paiements</a></li>
+                    <li><a href="{% url 'impayes_list' %}">Impayés</a></li>
+                    <li><a href="{% url 'retard_payement' %}">Retards</a></li>
+                    <li><a href="{% url 'journal_tracablite' %}">Audit</a></li>
+                {% elif request.user.role == "SECRETAIRE" %}
+                    <li><a href="{% url 'inscription_index' %}">Inscriptions</a></li>
+                    <li><a href="{% url 'eleve_index' %}">Élèves</a></li>
+                    <li><a href="{% url 'formation_index' %}">Classes</a></li>
+                {% elif request.user.role == "CAISSIER" %}
+                    <li><a href="{% url 'payment_index' %}">Paiements</a></li>
+                    <li><a href="{% url 'payment_create' %}">Nouveau paiement</a></li>
+                {% elif request.user.role == "COMPTABLE" %}
+                    <li><a href="{% url 'payment_index' %}">Paiements</a></li>
+                    <li><a href="{% url 'type_frais_index' %}">Types de frais</a></li>
+                    <li><a href="{% url 'frais_inscription_index' %}">Frais inscription</a></li>
+                    <li><a href="{% url 'impayes_list' %}">Impayés</a></li>
+                    <li><a href="{% url 'retard_payement' %}">Retards</a></li>
+                    <li><a href="{% url 'journal_tracablite' %}">Audit</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </aside>
 
-    <section id="main">
-        <div class="navbar">
-            <div class="recherche">
-                {% block form %} {% endblock %}
-                <div class="add">
-                    {% block ajouter %} {% endblock %}
-                </div>
-                
-            </div>
-            <div class="image">
-                <div class="dropdown">
-                    <button class="dropbtn">Menu</button>
-                    <div class="dropdown-content">
-                        <a href="{% url 'account_information' %}">compte</a>
-                        <a href="{% url 'deconnexion' %}">logout</a>
+    <main id="main">
+        <header class="navbar">
+            <div class="nav-left">
+                <button id="menu-toggle" aria-label="Ouvrir le menu">&#9776;</button>
+                <div class="recherche">
+                    {% block form %} {% endblock %}
+                    <div class="add">
+                        {% block ajouter %} {% endblock %}
                     </div>
                 </div>
             </div>
-        </div>
+
+            <div class="user-menu">
+                <div class="dropdown">
+                    <button class="dropbtn">Menu &#9662;</button>
+                    <div class="dropdown-content">
+                        <a href="{% url 'account_information' %}">Compte</a>
+                        <div class="divider"></div>
+                        <a href="{% url 'deconnexion' %}" class="logout-link">Déconnexion</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
         <h3 class="titre">
             {% block title %} {% endblock %}
         </h3>
+
         <div class="values">
             {% block contenu %} {% endblock %}
-
         </div>
+    </main>
 
-    </section>
+    <div id="sidebar-overlay"></div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
             const items = document.querySelectorAll('.items li');
 
-            items.forEach(item => {
-                item.addEventListener('click', function() {
-                    // Retirer la classe active de tous les items
-                    items.forEach(i => i.classList.remove('active'));
-
-                    // Ajouter la classe active à l'item cliqué
-                    this.classList.add('active');
-                });
+            // Toggle Sidebar
+            menuToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
             });
 
-            // Optionnel: Ajouter la classe active à l'item correspondant à la page actuelle
-            const currentPage = window.location.pathname;
+            // Fermer si clic sur l'overlay
+            overlay.addEventListener('click', () => {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+
+            // Gestion auto de la classe active
+            const currentPath = window.location.pathname;
             items.forEach(item => {
-                const link = item.querySelector('a').getAttribute('href');
-                if (link === currentPage) {
+                const link = item.querySelector('a');
+                if (link && link.getAttribute('href') === currentPath) {
                     item.classList.add('active');
                 }
             });
         });
     </script>
-    {% block scripts %}  {% endblock %}
+    {% block scripts %} {% endblock %}
 </body>
 </html>

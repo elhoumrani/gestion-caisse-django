@@ -30,21 +30,38 @@
             <h3>GesCaisse</h3>
         </div>
         <div class="items">
-            {% if request.user.is_admin %}
-            <li id="payment"><a href="{% url 'payment_index' %}">Payement</a></li>
-            <li id="inscription"><a href="{% url 'inscription_index' %}">Inscription</a></li>
-            <li id="eleve"><a href="{% url 'eleve_index' %}">eleve</a></li>
-            <li id="formation"><a href="{% url 'formation_index' %}">classe</a></li>
-            <li id="dashboard"><a href="{% url 'dash_board' %}">dashborad</a></li>
-            {% elif request.user.is_censeur  %}
-            <li id="inscription"><a href="{% url 'inscription_index' %}">Inscription</a></li>
-            <li id="eleve"><a href="{% url 'eleve_index' %}">eleve</a></li>
-            <li id="formation"><a href="{% url 'formation_index' %}">classe</a></li>
-            {% elif request.user.is_caissier  %}
-            <li id="payment"><a href="{% url 'payment_index' %}">Payement</a></li>
-            {% elif request.user.is_information  %}
+            <ul>
 
+            {# ================= PROVISEUR ================= #}
+            {% if request.user.role == "PROVISEUR" %}
+                <li><a href="{% url 'dash_board' %}">Dashboard</a></li>
+                <li><a href="{% url 'payment_index' %}">Suivi paiements</a></li>
+                <li><a href="{% url 'impayes_list' %}">Impayés</a></li>
+                <li><a href="{% url 'retard_payement' %}">Retards</a></li>
+                <li><a href="{% url 'journal_tracablite' %}">Audit</a></li>
+
+            {# ================= SECRETAIRE ================= #}
+            {% elif request.user.role == "SECRETAIRE" %}
+                <li><a href="{% url 'inscription_index' %}">Inscriptions</a></li>
+                <li><a href="{% url 'eleve_index' %}">Élèves</a></li>
+                <li><a href="{% url 'formation_index' %}">Classes</a></li>
+
+            {# ================= CAISSIER ================= #}
+            {% elif request.user.role == "CAISSIER" %}
+                <li><a href="{% url 'payment_index' %}">Paiements</a></li>
+                <li><a href="{% url 'payment_create' %}">Nouveau paiement</a></li>
+
+            {# ================= COMPTABLE ================= #}
+            {% elif request.user.role == "COMPTABLE" %}
+                <li><a href="{% url 'payment_index' %}">Paiements</a></li>
+                <li><a href="{% url 'type_frais_index' %}">Types de frais</a></li>
+                <li><a href="{% url 'frais_inscription_index' %}">Frais inscription</a></li>
+                <li><a href="{% url 'impayes_list' %}">Impayés</a></li>
+                <li><a href="{% url 'retard_payement' %}">Retards</a></li>
+                <li><a href="{% url 'journal_tracablite' %}">Audit</a></li>
             {% endif %}
+
+        </ul>
         </div>
     </section>
 

@@ -1,0 +1,211 @@
+{% extends "base/base1.html" %}
+{% load static %}
+
+{% block titre %}
+<title>Impression Retards | GesCaisse</title>
+{% endblock %}
+
+{% block styles %}
+<style>
+    :root {
+        --primary: #4361ee;
+        --danger: #ef233c;
+        --warning: #ffb703;
+        --text-dark: #2d3436;
+        --white: #ffffff;
+        --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .page-wrapper {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 20px;
+    }
+
+    /* Styles des filtres */
+    .filter-container {
+        background: var(--white);
+        padding: 1.5rem;
+        border-radius: 10px;
+        box-shadow: var(--shadow);
+    }
+
+    .filter-form {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1.5rem;
+        align-items: end;
+    }
+
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group label { font-size: 0.85rem; font-weight: 600; }
+    .form-group input, .form-group select { padding: 8px; border: 1px solid #ddd; border-radius: 6px; background-color: #fdfdfd; }
+
+    /* Boutons */
+    .btn {
+        padding: 10px 20px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+        transition: 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+        justify-content: center;
+    }
+
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-print { background: #2d3436; color: white; margin-bottom: 10px; }
+
+    /* Tableau */
+    .table-wrapper {
+        background: var(--white);
+        border-radius: 10px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+    }
+
+    .custom-table { width: 100%; border-collapse: collapse; }
+    .custom-table th { background: #f1f3f5; padding: 12px; text-align: left; font-size: 0.8rem; color: #636e72; text-transform: uppercase; }
+    .custom-table td { padding: 12px; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+
+    .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+    .badge-danger { background: var(--danger); color: white; }
+    .badge-warning { background: var(--warning); color: black; }
+
+    /* TITRE D'IMPRESSION */
+    .print-header {
+        display: none;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    @media print {
+        .sidebar, .navbar, .filter-container, .btn, .btn-relance, .titre, .dropdown, .recherche {
+            display: none !important;
+        }
+
+        body, #main, .values, .page-wrapper {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+        }
+
+        .print-header { display: block !important; }
+
+        .table-wrapper { box-shadow: none !important; border: 1px solid #ccc; }
+
+        .custom-table th {
+            background-color: #eee !important;
+            color: black !important;
+            -webkit-print-color-adjust: exact;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block title %}
+    <p style="margin-top: 16px;"></p>
+    Suivi de retard de paiement
+{% endblock %}
+
+{% block ajouter %}
+    <button class="btn btn-print" onclick="window.print()">
+        <i class="fas fa-print"></i> Imprimer la liste
+    </button>
+{% endblock %}
+
+{% block contenu %}
+<div class="page-wrapper">
+
+    <div class="print-header">
+        <h1>LISTE DES ÉLÈVES EN RETARD DE PAIEMENT</h1>
+        <p>Année Scolaire : {{ annee }} | Date : {% now "d/m/Y" %}</p>
+        <hr>
+    </div>
+
+    <div class="filter-container">
+        <form method="get" class="filter-form">
+            <div class="form-group">
+                <label>Recherche rapide</label>
+                <input type="text" id="studentSearch" name="q" placeholder="Nom de l'élève..." value="{{ request.GET.q }}">
+            </div>
+
+            <div class="form-group">
+                <label>Classe</label>
+                <select name="classe">
+                    <option value="">Toutes</option>
+                    {% for c in classes %}
+                    <option value="{{ c.id }}" {% if request.GET.classe == c.id|stringformat:"s" %}selected{% endif %}>
+                        {{ c.libele }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Délai de retard</label>
+                <select name="mois">
+                    <option value="">Tous les délais</option>
+                    <option value="1" {% if request.GET.mois == "1" %}selected{% endif %}>1 mois +</option>
+                    <option value="2" {% if request.GET.mois == "2" %}selected{% endif %}>2 mois +</option>
+                    <option value="3" {% if request.GET.mois == "3" %}selected{% endif %}>Critique (5+)</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Filtrer</button>
+        </form>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="custom-table" id="lateTable">
+            <thead>
+                <tr>
+                    <th>Élève</th>
+                    <th>Classe</th>
+                    <th>Mois Payés</th>
+                    <th>Retard</th>
+                    <th>Montant Dû</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in page_obj %}
+                <tr>
+                    <td><strong>{{ s.inscription.eleve }}</strong></td>
+                    <td>{{ s.inscription.classe }}</td>
+                    <td>{{ s.mois_couverts }} mois</td>
+                    <td>
+                        <span class="badge {% if s.mois_retard >= 3 %}badge-danger{% else %}badge-warning{% endif %}">
+                            {{ s.mois_retard }} mois
+                        </span>
+                    </td>
+                    <td style="font-weight: bold; color: var(--danger);">{{ s.montant_retard }} FCFA</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-muted);">
+                        <i class="fas fa-check-circle" style="font-size: 2rem; display: block; margin-bottom: 10px;"></i>
+                        Aucun retard de paiement pour le moment.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.getElementById('studentSearch').addEventListener('input', function() {
+        const val = this.value.toLowerCase();
+        const rows = document.querySelectorAll('#lateTable tbody tr');
+        rows.forEach(row => {
+            row.style.display = row.cells[0].textContent.toLowerCase().includes(val) ? '' : 'none';
+        });
+    });
+</script>
+{% endblock %}

@@ -24,11 +24,9 @@
 {% block title %} Classes {% endblock %}
 
 {% block contenu %}
-<div>
-    <input type="search" placeholder="rechercher" style="width: 100%; padding: 12px 8px; border: none; 
-               border-radius: 18px; background-color:lightgray;
-               margin: 25px 0px; font-size: 25px;" id="searchInput">
-</div>
+        <div class="recherche">
+            <input type="search" placeholder="rechercher" id="searchInput">
+        </div>
 
 <div class="tab">
     <table id="formationsTable">
@@ -47,13 +45,13 @@
             {% for list in liste %}
             <tr>
                 <td>
-                    <a href="{% url 'recalcitrant' id=list.id  %}"
+                    <a href="#"
                         style="text-decoration: none; color: black; cursor: pointer;">
                         {{ list.niveau }}
                     </a>
                 </td>
                 <td>
-                    <a href="{% url 'recalcitrant' id=list.id  %}"
+                    <a href="#"
                         style="text-decoration: none; color: black; cursor: pointer;">
                         {{ list.libele }}
                     </a>

@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
 from django.forms import ValidationError
+from GestionCaisse import settings
 from phonenumber_field.modelfields import PhoneNumberField
 
 from comptes.models import Utilisateur
@@ -28,8 +29,12 @@ STATUT_YEAR = [
         ('active', 'Active'),
         ('cloturee', 'Cloturée'),
     ]
+SEXE_CHOICES = [
+        ('masculin', 'M'),
+        ('feminin', 'F'),
+    ]
 
-class School_year(models.Model):
+class Annee_Scolaire(models.Model):
     date_debut = models.DateField()
     date_fin = models.DateField()
     libelle = models.CharField(max_length=12)  # ex: 2023-2024
@@ -38,92 +43,118 @@ class School_year(models.Model):
     def __str__(self):
         return self.libelle
 
-class Formation(models.Model):
+class Eleve(models.Model):
+    matricule = models.CharField(max_length=20)
+    nom = models.CharField(max_length=100)
+    prenom = models.CharField(max_length=100)
+    date_naissance = models.DateField()
+    sexe = models.CharField(max_length=12, choices=SEXE_CHOICES)
+    parent_contact = PhoneNumberField()
+    email = models.EmailField()
+    localisation = models.CharField(max_length=20)
+
+
+    def __str__(self):
+        return f" {self.nom} {self.prenom} , {self.matricule}  "
+
+class Classe(models.Model):
     niveau = models.CharField(max_length=100)  # ex: "Second", "Terminale"
     libele = models.CharField(max_length=20) # ex: "Second A, Second B"
     cycle = models.CharField(max_length=30, choices=CYCLE)
-    frais_inscription = models.DecimalField(max_digits=10, decimal_places=2)
-    mensualite = models.DecimalField(max_digits=10, decimal_places=2)
-    nbre_mois = models.IntegerField()
-    frais_scolarite = models.DecimalField(max_digits=10, decimal_places=2, default=0)  
-    frais_total = models.DecimalField(max_digits=10, decimal_places=2, default=0) 
-    def save(self, *args, **kwargs):
-        self.frais_scolarite = self.mensualite * Decimal(self.nbre_mois)
-        self.frais_total = self.frais_inscription + self.frais_scolarite
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.libele
 
 
-class Student(models.Model):
-    matricule = models.CharField(max_length=20)
-    nom = models.CharField(max_length=100)
-    prenom = models.CharField(max_length=100)
-    date_naissance = models.DateField()
-    SEXE_CHOICES = [
-        ('masculin', 'M'),
-        ('feminin', 'F'),
-    ]
-    sexe = models.CharField(max_length=12, choices=SEXE_CHOICES)
-    parent_contact = PhoneNumberField()
-    email = models.EmailField()
-    address = models.CharField(max_length=20)
-
-
-    def __str__(self):
-        return f" {self.nom} {self.prenom} , {self.matricule}  "
-    
-    
-
-
 class Inscription(models.Model):
-    eleve = models.ForeignKey(Student, on_delete=models.CASCADE)
-    classe = models.ForeignKey(Formation, on_delete=models.CASCADE)
-    regime = models.CharField(max_length=50,  choices=STATUS_REGIME, default=STATUS_REGIME[1][1])
-    pourcentage = models.CharField(max_length=10, default=0)
-    annee_scolaire = models.ForeignKey(School_year, on_delete=models.CASCADE)
+    eleve = models.ForeignKey(Eleve, on_delete=models.CASCADE)
+    classe = models.ForeignKey(Classe, on_delete=models.CASCADE)
+    annee_scolaire = models.ForeignKey(Annee_Scolaire, on_delete=models.CASCADE)
+    
+    regime = models.CharField(
+        max_length=50,  
+        choices=STATUS_REGIME, 
+        default=STATUS_REGIME[1][1])
+    
+    
+    statut = models.CharField(
+        max_length=125, 
+        choices=STATUTS_INSCRIPTION, 
+        default=STATUTS_INSCRIPTION[0][1])
+    
     date_inscription = models.DateField(auto_now_add=True)
-   
-    statut = models.CharField(max_length=125, choices=STATUTS_INSCRIPTION, default=STATUTS_INSCRIPTION[0][1])
+    
+    class Meta:
+        unique_together = ('eleve', 'classe', 'annee_scolaire')
+
     def __str__(self):
-        return f"{self.eleve}  {self.classe}"
+        return f"{self.eleve} - {self.classe} - {self.annee_scolaire} "
 
 
-class Payment(models.Model):
+class TypeFrais(models.Model):
+    nom = models.CharField(max_length=50)
+    montant = models.DecimalField(max_digits=10, decimal_places=2)
+    actif = models.BooleanField(default=True)
+    ordre = models.PositiveIntegerField()
+
+    def __str__(self):
+        return self.nom
+
+class FraisInscription(models.Model):
     inscription = models.ForeignKey(Inscription, on_delete=models.CASCADE)
-    MOTIF = [
-        ('inscriptions', 'Inscription'),
-        ('mensuel', 'Mensuel'),
-        ('Annuel', 'Annuel'),
-        ]
-    motif = models.CharField(max_length=30, choices=MOTIF)
+    type_frais = models.ForeignKey(TypeFrais, on_delete=models.CASCADE)
+    montant_total = models.DecimalField(max_digits=10, decimal_places=2)
+    remise = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    montant_du = models.DecimalField(max_digits=10, decimal_places=2)
+    motif_remise = models.CharField(max_length=200, blank=True)
+
+    class Meta:
+        unique_together = ('inscription', 'type_frais')
+    
+    def recalculer_montant_du(self):
+        montant_du = self.montant_total - self.remise
+        if montant_du < 0:
+            raise ValueError("La remise ne peut pas dépasser le montant total.")
+        self.montant_du = montant_du
+
+    def __str__(self):
+        return f"{self.inscription}"
+
+
+class Payement(models.Model):
+    frais_inscription = models.ForeignKey(FraisInscription, on_delete=models.CASCADE)
     montant = models.IntegerField()
     date_paiement = models.DateField(auto_now_add=True)
     numero_recu = models.CharField(max_length=12)
-    MODE_PAYE = [
-        ('espece', 'Espece'),
-        ('virement', 'Virement'),
-        ]
-    mode_paiement = models.CharField(max_length=20, choices=MODE_PAYE)
     utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True)
-    reference = models.CharField(max_length=45)
+    annule = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.montant} - {self.date_paiement} ({self.inscription})"
-    
-class Archive_Payment(models.Model):
-    payment = models.ForeignKey(Payment, on_delete=models.SET_NULL, null=True, related_name='archives')
-    inscription = models.ForeignKey(Inscription, on_delete=models.SET_NULL, null=True)
-    motif = models.CharField(max_length=30)
+        return f"{self.montant} - {self.date_paiement} ({self.frais_inscription})"
+
+class Depense(models.Model):
     montant = models.IntegerField()
-    date_paiement = models.DateField()
-    numero_recu = models.CharField(max_length=12)
-    mode_paiement = models.CharField(max_length=20)
+    motif = models.CharField(max_length=30)
+    date_depense = models.DateField(auto_now_add=True)
     utilisateur = models.ForeignKey(Utilisateur, on_delete=models.SET_NULL, null=True)
-    reference = models.CharField(max_length=45)
-    motif_edition = models.CharField(max_length=200)
-    date_archive = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Archive: {self.montant} - {self.date_paiement} ({self.inscription})"
+        return f"{self.motif} - {self.montant} - {self.date_depense}"
+
+class AuditLog(models.Model): 
+    ACTIONS = ( ("CREATION", "Création"), ("MODIFICATION", "Modification"), ("ANNULATION", "Annulation"), ("REMlSE", "Remise"), ("PAIEMENT", "Paiement"), ) 
+    action = models.CharField(max_length=30, choices=ACTIONS) 
+    modele = models.CharField(max_length=100) 
+    objet_id = models.PositiveIntegerField()
+
+    utilisateur = models.ForeignKey(
+    settings.AUTH_USER_MODEL,
+    on_delete=models.SET_NULL,
+    null=True
+)
+    date_action = models.DateTimeField(auto_now_add=True) 
+    motif = models.TextField(blank=True) 
+    donnees_avant = models.JSONField(null=True, blank=True) 
+    donnees_apres = models.JSONField(null=True, blank=True) 
+    def __str__(self): 
+        return f"{self.action} - {self.modele} - {self.objet_id}" 

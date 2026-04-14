@@ -1,268 +1,373 @@
+{% extends 'base/base1.html' %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title></title>
-    <meta
-      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
-      name="viewport"
-    />
+{% block titre %}<title>Tableau de bord Direction</title>{% endblock %}
 
-    <!-- Fonts and icons -->
-    
-    
+{% block contenu %}
+<style>
+    :root {
+        /* Palette Premium - Teintes Zinc & Indigo */
+        --primary: #4f46e5;
+        --primary-hover: #4338ca;
+        --success: #10b981;
+        --danger: #ef4444;
+        --warning: #f59e0b;
+        --bg-body: #f8fafc;
+        --bg-card: #ffffff;
+        --text-main: #0f172a;
+        --text-muted: #64748b;
+        --border: #e2e8f0;
+        --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+        --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+    }
 
-    <!-- CSS Files -->
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />    
-    <link rel="stylesheet" href="{% static 'css/kaiadmin.min.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/dash1.css' %}" />
+    .container {
+        width: 100%;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+    }
 
-    <style>
-      .items li.active {
-          background-color: #6a81b4; /* Couleur de fond pour l'item actif */
-          color: rgb(25, 24, 24); 
-          border-left: 4px solid #f3f4f6;
-          border-radius: 6px;
-      /* Couleur du texte pour l'item actif */
-      }
-  </style>
-  </head>
-  <body>
-    <div class="wrapper">
-      <!-- Sidebar -->
-      <div class="sidebar" style="background-color:rgba(75, 77, 160, 1) ;">
-        <div class="sidebar-head">
-            <img src="{% static '/img/1737195769624.jpg' %}" style="width: 45px; height: 45px;" alt="" >
-            <h3>GesCaisse</h3>
-        </div>
-        <div class="items">
-          {% if request.user.is_admin %}
-            <li id="payment"><a href="{% url 'payment_index' %}">Payement</a></li>
-            <li id="inscription"><a href="{% url 'inscription_index' %}">Inscription</a></li>
-            <li id="eleve"><a href="{% url 'eleve_index' %}">eleve</a></li>
-            <li id="formation"><a href="{% url 'formation_index' %}">classe</a></li>
-            <li id="dashboard"><a href="{% url 'dash_board' %}">dashborad</a></li>
-            {% elif request.user.is_censeur  %}
-            <li id="inscription"><a href="{% url 'inscription_index' %}">Inscription</a></li>
-            <li id="eleve"><a href="{% url 'eleve_index' %}">eleve</a></li>
-            <li id="formation"><a href="{% url 'formation_index' %}">classe</a></li>
-            {% elif request.user.is_caissier  %}
-            <li id="payment"><a href="{% url 'payment_index' %}">Payement</a></li>
-            {% elif request.user.is_information  %}
+    /* Header & Action Bar */
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    }
 
-            {% endif %}
-      
-        </div>
-      </div> 
-      
-      <!-- End Sidebar -->
+    .header h1 {
+        margin: 0;
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: var(--text-main);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
 
-      <div class="main-panel">
-        <div class="main-header">
+    .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
 
-          <!-- Navbar Header -->
-          <nav
-            class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom"
-          >
-            <div class="container-fluid">
-                <div class="recherche">
-                    <h3 class="fw-bold mb-3">GesCaisse</h3>
-                </div>
-                <div class="image">
-                    <div class="dropdown">
-                        <button class="dropbtn">Menu</button>
-                        <div class="dropdown-content">
-                            <a href="{% url 'account_information' %}">compte</a>
-                            <a href="{% url 'deconnexion' %}">logout</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-          </nav>
-          <!-- End Navbar -->
-        </div>
+    .btn-premium {
+        background-color: white;
+        color: var(--text-main);
+        border: 1px solid var(--border);
+        padding: 10px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+        box-shadow: var(--shadow-sm);
+    }
 
-        <div class="container">
-          <div class="page-inner">
-            <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
-              <div>
-                <h3 class="fw-bold mb-3">Dashboard</h3>  <a href="#" style="margin-left: 6px; font-size: 18px;">Parametre</a>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-sm-6 col-md-3">
-                <div class="card card-stats card-round" style="background-color: #C8E6C9">
-                  <div class="card-body">
-                    <div class="row align-items-center">
+    .btn-premium:hover {
+        background-color: var(--bg-body);
+        border-color: var(--primary);
+        color: var(--primary);
+    }
 
-                      <div class="col col-stats ms-3 ms-sm-0">
-                        <div class="numbers">
-                          <p class="card-category" style="font-size: 18px; font-weight: bold;">Revenu du jour</p>
-                          <h4 class="card-title">{{ revenu_jour }}  FCFA </h4>
-                          <p class="card-category">Pour {{ transaction }} transactions effectuées</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 col-md-2">
-                <div class="card card-stats card-round" style="background-color: #BBDEFB">
-                  <div class="card-body">
-                    <div class="row align-items-center">
-                    
-                      <div class="col col-stats ms-3 ms-sm-0">
-                        <div class="numbers">
-                          <p class="card-category" style="font-size: 18px; font-weight: bold;">Inscrits</p>
-                          <h4 class="card-title">{{ nbre_inscrit }}</h4>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6 col-md-2">
-                <div class="card card-stats card-round" style="background-color: #FFF9C4;">
-                  <div class="card-body">
-                    <div class="row align-items-center">
-          
-                      <div class="col col-stats ms-3 ms-sm-0">
-                        <div class="numbers">
-                          <p class="card-category" style="font-size: 18px; font-weight: bold;">Elève</p>
-                          <h4 class="card-title">{{ nbre_eleve }}</h4>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+    /* Grille de KPI */
+    .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+        margin-bottom: 2rem;
+    }
 
-              <div class="col-sm-6 col-md-2">
-                <div class="card card-stats card-round" style="background-color: #FFE0B2;">
-                  <div class="card-body">
-                    <div class="row align-items-center">
-                      <div class="col col-stats ms-3 ms-sm-0">
-                        <div class="numbers">
-                          <p class="card-category" style="font-size: 18px; font-weight: bold;"> Classe</p>
-                          <h4 class="card-title">{{ nombre_classe }}</h4>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+    .card-kpi {
+        background: var(--bg-card);
+        padding: 24px;
+        border-radius: 12px;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
 
-              <div class="col-sm-6 col-md-3">
-                <div class="card card-stats card-round" style="background-color: #E1BEE7;">
-                  <div class="card-body">
-                    <div class="row align-items-center">
-                    
-                      <div class="col col-stats ms-3 ms-sm-0">
-                        <div class="numbers">
-                          <p class="card-category"><a href="{% url 'index_year' %}" style="font-size: 18px; font-weight: bold;">Année Scolaire</a></p>
-                          <h4 class="card-title">{{ annee_sc }}</h4>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+    .card-kpi:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-md);
+    }
 
-            </div>
+    .card-kpi h3 {
+        margin: 0;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-muted);
+        font-weight: 700;
+    }
+
+    .card-kpi .value {
+        font-size: 1.75rem;
+        font-weight: 800;
+        margin-top: 10px;
+        display: block;
+        color: var(--text-main);
+    }
+
+    .card-kpi .unit {
+        font-size: 0.875rem;
+        color: var(--text-muted);
+        font-weight: 500;
+        margin-left: 4px;
+    }
+
+    /* Progress Bar */
+    .progress-wrapper {
+        margin-top: 15px;
+    }
+    .progress-bar-container {
+        height: 6px;
+        background: #f1f5f9;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .progress-bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary), #818cf8);
+        border-radius: 10px;
+        transition: width 1s ease-in-out;
+    }
+
+    /* Layout Grids */
+    .main-grid {
+        display: grid;
+        grid-template-columns:1fr;
+        gap: 20px;
+        margin-bottom: 24px;
+    }
+
+    .section {
+        background: var(--bg-card);
+        padding: 24px;
+        border-radius: 12px;
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border);
+    }
+
+    .section h2 {
+        margin-top: 0;
+        margin-bottom: 1.5rem;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-main);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* Tableaux Épurés */
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th {
+        padding: 12px 16px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        border-bottom: 1px solid var(--border);
+        background: #fcfcfd;
+    }
+
+    td {
+        padding: 16px;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 0.9rem;
+        color: var(--text-main);
+    }
+
+    tr:hover td {
+        background-color: #f8fafc;
+    }
+
+    /* Badges Style "Pilule" */
+    .badge {
+        padding: 4px 12px;
+        border-radius: 9999px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        display: inline-block;
+    }
+
+    .badge-danger { background: #fef2f2; color: #dc2626; }
+    .badge-success { background: #ecfdf5; color: #059669; }
+
+    /* Custom Filters */
+    .filter-group {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: #f1f5f9;
+        padding: 6px 12px;
+        border-radius: 10px;
+    }
+
+    select {
+        border: none;
+        background: transparent;
+        font-weight: 600;
+        color: var(--primary);
+        cursor: pointer;
+        outline: none;
+    }
+
+    @media (max-width: 1024px) {
+        .main-grid { grid-template-columns: 1fr; }
+    }
+</style>
+
+<div class="container">
+    <header class="header">
+        <h1>📊 Direction Dashboard</h1>
+        
+        <div class="nav-actions">
+            <a href="{% url 'journal_tracablite' %}" class="btn-premium">📝 Journal</a>
+            <a href="{% url 'list_users' %}" class="btn-premium">👥 Utilisateurs</a>
             
-            <div class="row">
-              <div class="col-md-3">
-                <div class="card card-round" style="background-color: #F0F0F0;">
-                  <div class="card-body">
-                    <div class="card-head-row card-tools-still-right">
-                      <div class="card-title">
-                        <a href="{% url 'list_users' %}" style="text-decoration: none; color: rgba(0, 0, 255, 0.566); cursor: pointer;">
-                          Intendents
-                        </a>
-                      </div> 
-                    </div>
-                    <div class="card-list py-2">
-                      {% for i in users %}
-                      <div class="item-list">                          
-                          <div class="username">{{ i.username }}</div>
-                      </div>
-                      {% endfor %}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-9">
-                <div class="card card-round" style="background-color: #F5F5DC;">
-                  <div class="card-header">
-                    <div class="card-head-row card-tools-still-right">
-                      <div class="card-title">Statistiques Classes </div> 
-                    </div>
-                  </div>
-                  <div class="card-body p-0">
-                    <div class="table-responsive">
-                      <!-- Projects table -->
-                      <table class="table align-items-center mb-0">
-                        <thead class="thead-light">
-                          <tr>
-                            <th scope="col">Classe</th>
-                            <th scope="col">Apprenant</th>
-                            <th scope="col">Revenu net</th>
-                            <th scope="col">Reçu</th>
-                            <th scope="col">Reste</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {% for i in data %}
-                          <tr>
-                            <td scope="row">
-                              <a href="{% url 'recalcitrant' id=i.classe.id %}" style="text-decoration: none; color: black;">{{i.classe.libele}}</a>
-                            </td>
-                            <td scope="row">{{ i.nbre_apprenant }}</td>
-                          
-                            <td> {{ i.revenu_net|floatformat:2 }}</td>
-                            <td>{{ i.paye|floatformat:2 }}</td>
-                            <td>{{ i.reste|floatformat:2 }}</td>
-  
-                          </tr>
-                          {% endfor %}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <div class="filter-group">
+                <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted);">ANNÉE</span>
+                <form method="get">
+                    <select name="annee" onchange="this.form.submit()">
+                        {% for a in annees %}
+                        <option value="{{ a.id }}" {% if a.id == annee.id %}selected{% endif %}>{{ a }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
             </div>
-          </div>
-        </div>        
-      </div> 
-      
-      
-      <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const items = document.querySelectorAll('.items li');
+        </div>
+    </header>
 
-            items.forEach(item => {
-                item.addEventListener('click', function() {
-                    // Retirer la classe active de tous les items
-                    items.forEach(i => i.classList.remove('active'));
+    <div class="kpi-grid">
+        <div class="card-kpi">
+            <h3>Élèves inscrits</h3>
+            <span class="value">{{ total_eleves }}</span>
+        </div>
+        <div class="card-kpi">
+            <h3>Objectif financier</h3>
+            <span class="value">{{ total_attendu }} <span class="unit">FCFA</span></span>
+        </div>
+        <div class="card-kpi">
+            <h3>Recettes réelles</h3>
+            <span class="value" style="color: var(--success);">{{ total_encaisse }} <span class="unit">FCFA</span></span>
+        </div>
+        <div class="card-kpi">
+            <h3>Restant à recouvrer</h3>
+            <span class="value" style="color: var(--danger);">{{ total_impaye }} <span class="unit">FCFA</span></span>
+        </div>
+        <div class="card-kpi">
+            <h3>Performance</h3>
+            <span class="value" style="color: var(--primary);">{{ taux_recouvrement }}%</span>
+            <div class="progress-wrapper">
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" style="width: {{ taux_recouvrement }}%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                    // Ajouter la classe active à l'item cliqué
-                    this.classList.add('active');
-                });
-            });
+    <div class="main-grid">
+        <div class="section">
+            <h2>💼 Performance des Caissiers</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Caissier</th>
+                            <th>Total encaissé</th>
+                            <th>Transactions</th>
+                            <th>Annulations</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in stats_caissiers %}
+                        <tr>
+                            <td style="font-weight: 700;">{{ c.utilisateur__username }}</td>
+                            <td style="color: var(--success); font-weight: 700;">{{ c.total_encaisse }} FCFA</td>
+                            <td>{{ c.nb_paiements }}</td>
+                            <td>
+                                <span class="badge {% if c.nb_annules > 0 %}badge-danger{% else %}badge-success{% endif %}">
+                                    {{ c.nb_annules }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="4" style="text-align: center;">Aucune donnée</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-            // Optionnel: Ajouter la classe active à l'item correspondant à la page actuelle
-            const currentPage = window.location.pathname;
-            items.forEach(item => {
-                const link = item.querySelector('a').getAttribute('href');
-                if (link === currentPage) {
-                    item.classList.add('active');
-                }
-            });
-        });
-    </script>
-  </body>
-</html>
+        <div class="section">
+            <h2>📂 Répartition Impayés</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Catégorie</th>
+                            <th>Montant</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for t in impayes_par_type %}
+                        <tr>
+                            <td>{{ t.type_frais__nom }}</td>
+                            <td style="color: var(--danger); font-weight: 700;">{{ t.total_impaye }} FCFA</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="2">Rien à signaler</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🏫 Situation du Recouvrement par Classe</h2>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 200px;">Classe</th>
+                        <th>Niveau de recouvrement</th>
+                        <th style="text-align: right;">Impayés</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in impayes_par_classe %}
+                    <tr>
+                        <td style="font-weight: 700;">{{ c.inscription__classe__libele }}</td>
+                        <td>
+                            <div style="display: flex; align-items: center; gap: 15px;">
+                                <div style="flex-grow: 1; height: 8px; background: #f1f5f9; border-radius: 10px;">
+                                    <div style="height: 100%; background: var(--warning); width: 65%; border-radius: 10px;"></div>
+                                </div>
+                                <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">65%</span>
+                            </div>
+                        </td>
+                        <td style="color: var(--danger); font-weight: 700; text-align: right;">{{ c.total_impaye }} FCFA</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="3">Excellent ! Toutes les classes sont à jour.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,206 @@
+{% extends 'base/base1.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block titre %}<title>Inscription</title>{% endblock %}
+</head>
+
+<body>
+    <div class="content">
+        {% block ajouter %}
+        <a href="{% url 'inscription_create' %}"><img src="{% static '/img/Ellipse 1 (2).png' %}"></a>
+        {% endblock %}
+
+        {% block title %} Situation financiere de l'eleve {% endblock %}
+
+       
+        {% block contenu %}
+            <style>
+                .finance-container {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                    width: 100%;
+                    padding: 20px;
+                    background-color: inherit;
+                }
+
+                /* Bloc Infos Élève - On garde le style original */
+                .student-block {
+                    background: white;
+                    padding: 20px;
+                    border-radius: 10px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+                    margin-bottom: 25px;
+                    border-left: 5px solid #4a90e2;
+                }
+                .student-block h3 { margin-top: 0; color: #2c3e50; }
+                .student-block p { margin: 5px 0; font-size: 1.1rem; }
+
+                /* Conteneur des 3 cartes sur une ligne */
+                .cards-row {
+                    display: grid;
+                    grid-template-columns: repeat(4,1fr); /* 3 colonnes égales */
+                    gap: 20px;
+                    margin-bottom: 30px;
+                }
+
+                .stat-card {
+                    background: white;
+                    padding: 25px;
+                    border-radius: 10px;
+                    box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    border-bottom: 4px solid #ddd;
+                }
+
+                /* Titres des cartes (Libellés) */
+                .stat-label {
+                    font-size: 1rem;
+                    color: #7f8c8d;
+                    text-transform: uppercase;
+                    font-weight: bold;
+                    margin-bottom: 10px;
+                }
+
+                /* Montants (Valeurs) - Taille maintenue large */
+                .stat-value {
+                    font-size: 1.6rem;
+                    font-weight: 800;
+                }
+
+                /* Couleurs spécifiques */
+                .card-total { border-bottom-color: #2980b9; }
+                .card-paye { border-bottom-color: #27ae60; }
+                .card-reste { border-bottom-color: #e74c3c; }
+                .car
+
+                .text-blue { color: #2980b9; }
+                .text-green { color: #27ae60; }
+                .text-red { color: #e74c3c; }
+
+                /* Tableau */
+                .table-section {
+                    background: white;
+                    padding: 0;
+                    border-radius: 10px;
+                    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+                    overflow: hidden;
+                }
+
+                table { width: 100%; border-collapse: collapse; }
+                
+                td { padding: 15px; border-bottom: 1px solid #eee; font-size: 1rem; }
+                tr:hover { background-color: #fdfdfd; }
+
+                .badge {
+                    padding: 6px 12px;
+                    border-radius: 20px;
+                    font-size: 0.85rem;
+                    font-weight: bold;
+                }
+                .badge-solded { background: #d4edda; color: #155724; }
+                .badge-partial { background: #fff3cd; color: #856404; }
+                .badge-unpaid { background: #f8d7da; color: #721c24; }
+            </style>
+
+            <div class="finance-container">
+                
+                <div class="student-block">
+                    <h3>Situation de l'élève</h3>
+                    <p><strong>Élève :</strong> {{ inscription.eleve }}</p>
+                    <p><strong>Classe :</strong> {{ inscription.classe }}</p>
+                    <p><strong>Année scolaire :</strong> {{ inscription.annee_scolaire }}</p>
+                </div>
+
+                <div class="cards-row">
+                    <div class="stat-card card-total">
+                        <span class="stat-label">Total des frais</span>
+                        <span class="stat-value text-blue">{{ situation.total_frais }} FCFA</span>
+                    </div>
+                    <div class="stat-card card-total">
+                        <span class="stat-label">Total des remises</span>
+                        <span class="stat-value text-blue">{{ situation.total_remise }} FCFA</span>
+                    </div>
+
+                    <div class="stat-card card-paye">
+                        <span class="stat-label">Total déjà payé</span>
+                        <span class="stat-value text-green">{{ situation.total_paye }} FCFA</span>
+                    </div>
+
+                    <div class="stat-card card-reste">
+                        <span class="stat-label">Reste à payer</span>
+                        <span class="stat-value text-red">{{ situation.total_restant}} FCFA</span>
+                    </div>
+                </div>
+
+                <h3 style="color: #2c3e50; margin-bottom: 15px;">Détails des règlements</h3>
+                <div class="table-section">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Type de frais</th>
+                                <th>Montant Total</th>
+                                <th>Montant Payé</th>
+                                <th>Montant Restant</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for d in situation.details %}
+                            <tr>
+                                <td><strong>{{ d.type_frais }}</strong></td>
+                                <td>{{ d.montant_total  }} FCFA</td>
+                                <td class="text-green">{{ d.montant_paye }} FCFA</td>
+                                <td class="text-red"><strong>{{ d.montant_restant }} FCFA</strong></td>
+                                <td>
+                                    {% if d.statut == "soldé" %}
+                                        <span class="badge badge-solded">✅ Soldé</span>
+                                    {% elif d.statut == "partiel" %}
+                                        <span class="badge badge-partial">⚠️ Partiel</span>
+                                    {% else %}
+                                        <span class="badge badge-unpaid">❌ Impayé</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endblock %}
+        
+    </div>
+
+    {% block scripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('searchInput').addEventListener('keyup', function () {
+                const filter = this.value.toLowerCase();
+                const rows = document.querySelectorAll('#inscriptionsTable tbody tr');
+
+                rows.forEach(row => {
+                    const cells = row.getElementsByTagName('td');
+                    let rowContainsFilter = false;
+
+                    for (let i = 0; i < cells.length; i++) {
+                        if (cells[i].textContent.toLowerCase().includes(filter)) {
+                            rowContainsFilter = true;
+                            break;
+                        }
+                    }
+
+                    // Afficher toutes les lignes si le champ est vide
+                    row.style.display = (filter === '' || rowContainsFilter) ? '' : 'none';
+                });
+            });
+        });
+    </script>
+    {% endblock %}
+</body>
+
+</html>

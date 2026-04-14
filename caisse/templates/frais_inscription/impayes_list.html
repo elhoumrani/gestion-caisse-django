@@ -1,0 +1,342 @@
+{% extends 'base/base1.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block titre %}<title>Frais Inscription</title>{% endblock %}
+</head>
+
+<body>
+<div class="content">
+
+
+{% block contenu %}
+
+        
+<style>
+    /* 1. Reset & Variables */
+    :root {
+        --primary-color: #2563eb;
+        --danger-color: #dc2626;
+        --success-color: #16a34a;
+        --bg-body: #f8fafc;
+        --bg-card: #ffffff;
+        --text-main: #1e293b;
+        --text-muted: #64748b;
+        --border-color: #e2e8f0;
+        --radius: 8px;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+
+    .container {
+        width: 100%;
+    }
+
+    /* 2. Header */
+    .header-section {
+        margin-bottom: 30px;
+    }
+
+    .header-section h2 {
+        font-size: 1.75rem;
+        margin-bottom: 5px;
+        color: var(--text-main);
+    }
+
+    .header-section p {
+        color: var(--text-muted);
+        margin: 0;
+    }
+
+    /* 3. Formulaire de Filtrage */
+    .filter-card {
+        background: var(--bg-card);
+        padding: 20px;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        margin-bottom: 25px;
+        border: 1px solid var(--border-color);
+    }
+
+    .filter-form {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        align-items: end;
+    }
+
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .filter-group label {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--text-muted);
+    }
+
+    .filter-group select {
+        padding: 10px;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        background-color: inherit;
+        font-size: 0.95rem;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+
+    .filter-group select:focus {
+        border-color: var(--primary-color);
+    }
+
+    .btn-submit {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 11px 20px;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: opacity 0.2s;
+    }
+
+    .btn-reset {
+        text-decoration: none;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        text-align: center;
+        padding: 10px;
+    }
+
+    .btn-submit:hover { opacity: 0.9; }
+
+    /* 4. Tableau Professionnel */
+    .table-container {
+        background: var(--bg-card);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        border: 1px solid var(--border-color);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+    }
+
+  
+
+    th {
+        padding: 15px 20px;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-bottom: 2px solid var(--border-color);
+    }
+
+    td {
+        padding: 15px 20px;
+        border-bottom: 1px solid var(--border-color);
+        font-size: 0.95rem;
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    tr:hover { background-color: #f8fafc; }
+
+    /* Badges & Montants */
+    .badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        background: #e2e8f0;
+    }
+
+    .amount {
+        color: var(--danger-color);
+        font-weight: 700;
+    }
+
+    .btn-action {
+        display: inline-flex;
+        align-items: center;
+        text-decoration: none;
+        color: var(--primary-color);
+        font-weight: 600;
+        font-size: 0.9rem;
+        gap: 5px;
+    }
+
+    /* 5. Pagination */
+    .pagination {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        background: #fff;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .pagination-links a {
+        text-decoration: none;
+        color: var(--text-main);
+        padding: 8px 16px;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+    }
+
+    .pagination-links a:hover {
+        background-color: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 40px;
+        color: var(--text-muted);
+    }
+</style>
+
+<div class="container">
+    <div class="header-section">
+        <h2>📋 Liste des Impayés</h2>
+        
+    </div>
+
+    <div class="filter-card">
+        <form method="get" class="filter-form">
+            <div class="filter-group">
+                <label>Classe</label>
+                <select name="classe">
+                    <option value="">Toutes les classes</option>
+                    {% for c in classes %}
+                        <option value="{{ c.id }}" {% if classe_selected == c.id|stringformat:"s" %}selected{% endif %}>
+                            {{ c.libele }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Année</label>
+                <select name="annee">
+                    {% for a in annees %}
+                        <option value="{{ a.id }}" {% if annee_selected == a.id %}selected{% endif %}>
+                            {{ a.libelle }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Type de frais</label>
+                <select name="type_frais">
+                    <option value="">Tous les types</option>
+                    {% for t in types_frais %}
+                        <option value="{{ t.id }}" {% if type_frais_selected == t.id|stringformat:"s" %}selected{% endif %}>
+                            {{ t.nom }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <button type="submit" class="btn-submit">Filtrer</button>
+                <a href="{% url 'impayes_list' %}" class="btn-reset">Réinitialiser</a>
+            </div>
+        </form>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Élève</th>
+                    <th>Classe</th>
+                    <th>Type de frais</th>
+                    <th>Montant dû</th>
+                    <th style="text-align: center;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for f in impayes %}
+                <tr>
+                    <td><strong>{{ f.inscription.eleve }}</strong></td>
+                    <td><span class="badge">{{ f.inscription.classe }}</span></td>
+                    <td>{{ f.type_frais.nom }}</td>
+                    <td><span class="amount">{{ f.montant_du }} FCFA</span></td>
+                    <td style="text-align: center;">
+                        <a href="{% url 'details_inscription_eleve' inscription_id=f.inscription.id %}" class="btn-action">
+                            📊 Situation
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="empty-state">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">🎉</div>
+                        Aucun impayé trouvé pour ces critères.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if impayes.has_other_pages %}
+        <div class="pagination">
+            <span class="text-muted">Page <strong>{{ impayes.number }}</strong> sur {{ impayes.paginator.num_pages }}</span>
+            
+            <div class="pagination-links">
+                {% if impayes.has_previous %}
+                    <a href="?page={{ impayes.previous_page_number }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}">⬅️ Précédent</a>
+                {% endif %}
+
+                {% if impayes.has_next %}
+                    <a href="?page={{ impayes.next_page_number }}{% if request.GET.urlencode %}&{{ request.GET.urlencode }}{% endif %}">Suivant ➡️</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+        {% endblock %}
+    </div>
+
+    {% block scripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('searchInput').addEventListener('keyup', function () {
+                const filter = this.value.toLowerCase();
+                const rows = document.querySelectorAll('#inscriptionsTable tbody tr');
+                rows.forEach(row => {
+                    const cells = row.getElementsByTagName('td');
+                    let rowContainsFilter = false;
+
+                    for (let i = 0; i < cells.length; i++) {
+                        if (cells[i].textContent.toLowerCase().includes(filter)) {
+                            rowContainsFilter = true;
+                            break;
+                        }
+                    }
+
+                    row.style.display = (filter === '' || rowContainsFilter) ? '' : 'none';
+                });
+            });
+        });
+    </script>
+    {% endblock %}
+</body>
+
+</html>

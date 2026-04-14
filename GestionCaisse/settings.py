@@ -33,15 +33,15 @@ load_dotenv(os.path.join(BASE_DIR, ".env"))
 SECRET_KEY =os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG") == "True"
-import pdfkit
+DEBUG = os.getenv("DEBUG")
+
 
 # Spécifiez le chemin vers wkhtmltopdf
 # Ajoutez la configuration à pdfkit
-config = pdfkit.configuration()
+#config = pdfkit.configuration()
 # utilisera l’exécutable installé par aptfile
 
-pdfkit.from_url("hey!", "output.pdf", configuration=config)
+#pdfkit.from_url("hey!", "output.pdf", configuration=config)
 
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
@@ -60,7 +60,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'comptes',
-    'caisse'
+    'caisse',
 ]
 
 MIDDLEWARE = [

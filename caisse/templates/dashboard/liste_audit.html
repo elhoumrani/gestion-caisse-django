@@ -1,0 +1,229 @@
+{% extends 'base/base1.html' %}
+{% load static %}
+
+{% block titre %}<title>Audits</title>{% endblock %}
+
+
+{% block ajouter %}
+
+{% endblock %}
+
+{% block title %} Journal de traçabilité  {% endblock %}
+
+{% block contenu %}
+
+<style>
+:root {
+    --primary: #2563eb;
+    --bg-body: #f1f5f9;
+    --bg-card: #ffffff;
+    --border: #e2e8f0;
+    --text: #1e293b;
+}
+
+body {
+    background-color: var(--bg-body);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    color: var(--text);
+
+}
+
+/* --- Formulaire de Filtre Horizontal --- */
+.filter-bar {
+    background: var(--bg-card);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+     width: 100%;
+}
+
+.filter-group {
+    width: 100%;
+    flex: 1; /* Pour que les selects occupent l'espace équitablement */
+}
+
+.form-select-custom {
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background-color: #fff;
+    color: var(--text);
+    font-size: 14px;
+    outline: none;
+}
+
+.form-select-custom:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+}
+
+.btn-filter {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 8px 24px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+}
+
+.btn-filter:hover {
+    background-color: #1d4ed8;
+}
+
+/* --- Table d'Audit --- */
+.table-wrapper {
+     width: 100%;
+    background: var(--bg-card);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 14px;
+}
+
+.custom-table thead {
+    background-color: inherit;
+}
+
+.custom-table th {
+    padding: 12px 15px;
+    font-weight: 600;
+    color: white;
+    text-transform: uppercase;
+    font-size: 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+.custom-table td {
+    padding: 10px 15px;
+    border-bottom: 1px solid var(--border);
+}
+
+.custom-table tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+/* Badge ID Style */
+.audit-id {
+    font-family: monospace;
+    color: var(--primary);
+    font-weight: bold;
+    background: #eff6ff;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+</style>
+
+<form method="get" class="filter-bar">
+    <div class="filter-group">
+        <select name="action" class="form-select-custom">
+            <option value="">-- Action --</option>
+            {% for key, label in actions %}
+                <option value="{{ key }}" {% if key == action_selectionnee %}selected{% endif %}>
+                    {{ label }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="filter-group">
+        <select name="modele" class="form-select-custom">
+            <option value="">-- Modèle --</option>
+            {% for m in modeles %}
+                <option value="{{ m }}" {% if m == modele_selectionne %}selected{% endif %}>
+                    {{ m }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="filter-group">
+        <select name="utilisateur" class="form-select-custom">
+            <option value="">-- Utilisateur --</option>
+            {% for u in utilisateurs %}
+                <option value="{{ u.id }}" {% if u.id|stringformat:"s" == utilisateur_selectionne %}selected{% endif %}>
+                    {{ u }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <button type="submit" class="btn-filter">Filtrer</button>
+</form>
+
+<div class="table-wrapper">
+    <table class="custom-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Action</th>
+                <th>Modèle</th>
+                <th>ID</th>
+                <th>Utilisateur</th>
+                <th>Motif</th>
+                <th>Données avant </th>
+                <th>Données apres</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for audit in page_obj %}
+                <tr>
+                    <td>{{ audit.date_action|date:"d/m/Y H:i" }}</td>
+                    <td><strong>{{ audit.get_action_display }}</strong></td>
+                    <td>{{ audit.modele }}</td>
+                    <td><span class="audit-id">#{{ audit.objet_id }}</span></td>
+                    <td>{{ audit.utilisateur }}</td>
+                    <td style="color: #64748b;">{{ audit.motif|default:"—" }}</td>
+                    <td>
+                    {% if audit.donnees_avant %}
+                    <ul class="list-unstyled mb-0">
+                    {% for key, value in audit.donnees_avant.items %}
+                    <li>
+                    <strong>{{ key }}</strong> : {{ value }}
+                    </li>
+                    {% endfor %}
+                    </ul>
+                    {% else %}
+                    —
+                    {% endif %}
+                    </td>
+
+                    <td>
+                    {% if audit.donnees_apres %}
+                    <ul class="list-unstyled mb-0">
+                    {% for key, value in audit.donnees_apres.items %}
+                    <li>
+                    <strong>{{ key }}</strong> : {{ value }}
+                    </li>
+                    {% endfor %}
+                    </ul>
+                    {% else %}
+                    —
+                    {% endif %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 20px;">Aucune trace trouvée</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

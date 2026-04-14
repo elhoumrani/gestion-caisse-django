@@ -1,0 +1,57 @@
+{% extends 'base/baseform.html' %}
+{% load static %}
+
+
+{% block contenu %}
+<div class="container">
+    <h4 style="text-align: center;">Editer apprenant</h4>
+    <form method="post">
+        {% csrf_token %}
+
+        {{ form.non_field_errors }}
+
+        <div>
+            {{ form.type_frais.label_tag }}
+            {{ form.type_frais }}
+        </div>
+
+        <div>
+            {{ form.montant_total.label_tag }}
+            {{ form.montant_total }}
+        </div>
+
+        <div>
+            {{ form.remise.label_tag }}
+            {{ form.remise }}
+            {{ form.remise.errors }}
+        </div>
+
+        <div id="motif-container" >
+            {{ form.motif_remise.errors }}
+            {{ form.motif_remise.label_tag }}
+            {{ form.motif_remise }}
+            
+        </div>
+
+        <div>
+            {{ form.montant_du.label_tag }}
+            {{ form.montant_du }}
+        </div>
+
+        <div class="btn">
+            <button type="submit">Modifier</button>
+            <button type="reset">
+                <a href="{% url 'frais_inscription_index' %}" style="text-decoration: none; color: white; cursor: pointer;" > 
+                    annuler
+                </a>
+            </button>
+        </div>
+    </form>
+</div>
+
+
+{% endblock %} 
+
+
+
+

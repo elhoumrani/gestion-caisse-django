@@ -1,0 +1,34 @@
+{% extends 'base/baseform.html' %}
+{% load static %}
+
+
+{% block contenu %}
+<div class="container">
+    <h4 style="text-align: center;">Ajouter un Type de frais</h4>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.nom.label_tag }}<br>
+            {{ form.nom }}
+        </div>
+
+        <div class="form-group">
+           {{ form.montant.label_tag }}<br>
+            {{ form.montant }}
+        </div>
+        <div class="form-group">
+           {{ form.ordre.label_tag }}<br>
+            {{ form.ordre }}
+        </div>
+
+        <div class="btn">
+            <button type="submit">Ajouter</button>
+            <button type="reset">annuler</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %} 
+    
+
+

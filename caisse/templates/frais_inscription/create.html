@@ -1,0 +1,39 @@
+{% extends 'base/baseform.html' %}
+{% load static %}
+
+
+{% block contenu %}
+<div class="container">
+    <h4 style="text-align: center;">Ajouter frais d'inscription </h4>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.inscription.label_tag }}<br>
+            {{ form.inscription }}
+        </div>
+
+        <div class="form-group">
+           {{ form.type_frais.label_tag }}<br>
+            {{ form.type_frais }}
+        </div>
+    
+        <div class="form-group">
+           {{ form.remise.label_tag }}<br>
+            {{ form.remise }}
+        </div>
+        <div class="form-group">
+           {{ form.motif_remise.label_tag }}<br>
+            {{ form.motif_remise }}
+        </div>
+
+        <div class="btn">
+            <button type="submit">Ajouter</button>
+            <button type="reset">annuler</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %} 
+    
+
+

@@ -1,0 +1,43 @@
+{% extends 'base/baseform.html' %}
+{% load static %}
+
+
+{% block contenu %}
+<div class="container">
+    <h4 style="text-align: center;">Editer apprenant</h4>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.nom.label_tag }}<br>
+            {{ form.nom }}
+        </div>
+
+        <div class="form-group">
+           {{ form.montant.label_tag }}<br>
+            {{ form.montant }}
+        </div>
+
+        <div class="form-group">
+            {{ form.actif.label_tag }}</label><br>
+            {{ form.actif }}
+        </div>
+        <div class="form-group">
+           {{ form.ordre.label_tag }}<br>
+            {{ form.ordre }}
+        </div>
+        
+        <div class="btn">
+            <button type="submit">Ajouter</button>
+            <button type="reset">
+                <a href="{% url 'type_frais_index' %}" style="text-decoration: none; color: white; cursor: pointer;" > 
+                    annuler
+                </a>
+            </button>
+        </div>
+    </form>
+</div>
+
+{% endblock %} 
+    
+
+

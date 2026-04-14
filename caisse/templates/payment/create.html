@@ -18,22 +18,10 @@
         </div>
 
         <div class="form-group">
-            {{ form.motif.label_tag }}<br>
-            {{ form.motif }}
+            {{ form.montant.label_tag }}<br>
+            {{ form.montant }}
         </div>
 
-        <div class="form-group" id="nombre_mois_group" style="display: none;">
-            <label for="nombre_mois">Nombre de mois</label><br>
-            <input type="number" id="nombre_mois" name="nombre_mois" min="1" value="1">
-        </div>
-        <div class="form-group">
-           {{ form.date_paiement.label_tag }}<br>
-            <div class="champ">{{ form.date_paiement }} </div>
-        </div>
-        <div class="form-group">
-            {{ form.mode_paiement.label_tag }}<br>
-            {{ form.mode_paiement }}
-        </div>
         <div class="btn">
             <button type="submit">Ajouter</button>
             <button type="reset">annuler</button>

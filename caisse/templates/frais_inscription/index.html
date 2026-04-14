@@ -6,16 +6,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% block titre %}<title>Inscription</title>{% endblock %}
+    {% block titre %}<title>Frais Inscription</title>{% endblock %}
 </head>
 
 <body>
     <div class="content">
         {% block ajouter %}
-        <a href="{% url 'inscription_create' %}"><img src="{% static '/img/Ellipse 1 (2).png' %}"></a>
+        <a href="{% url 'frais_inscription_create' %}"><img src="{% static '/img/Ellipse 1 (2).png' %}"></a>
         {% endblock %}
 
-        {% block title %} Inscription du compte de l'année en cours {{ list.annee_scolaire }} {% endblock %}
+        {% block title %} Frais Inscription {% endblock %}
 
         {% block contenu %}
         <div>
@@ -24,34 +24,38 @@
                margin: 25px 0px; font-size: 25px;" id="searchInput">
         </div>
         <div class="tab">
-            <p style="text-align: left; font-weight: 700; margin-top: 4px; margin-bottom: 6px;"></p>
             <table id="inscriptionsTable">
                 <thead>
                     <tr>
-                        <th>Eleve</th>
-                        <th>Classe</th>
-                        <th>Année Scolaire</th>
+                        <th>Inscription</th>
+                        <th>Type de frais</th>
+                        <th>Montant total</th>
+                        <th>Remise</th>
+                        <th>Net à payer</th>
+                        <th>Motif de remise</th>
                         <th>Actions</th>
+
                     </tr>
                 </thead>
                 <tbody>
-                    {% for elt in inscrit %}
+                    {% for list in liste %}
                     <tr>
-                        
+                        <td>{{ list.inscription }}</td>
+                        <td>{{ list.type_frais }}</td>
+                        <td>{{ list.montant_total }}</td>
+                        <td>{{ list.remise }}</td>
+                        <td>{{ list.montant_du }}</td>
+                        <td>{{ list.motif_remise }}</td>
+
                         <td>
-                            <a href="{% url 'details_inscription_eleve' inscription_id=elt.id %}" style="text-decoration: none; color: black;">
-                                {{ elt.eleve }}
+                            <a href="{% url 'frais_inscription_edit' id=list.id %}" class="edit"
+                                style="text-decoration: none; cursor: pointer; margin-right: 2px;">
+                                <i class="fas fa-edit" style="color: black;"></i>
                             </a>
-                        </td>
-                        
-                        <td>{{ elt.classe }}</td>
-                        <td>{{ elt.annee_scolaire }}</td>
-                        <td>
-                           
-                            <a href="{% url 'inscription_edit' id=elt.id %}" class="edit"><i class="fas fa-edit"></i></a>
-                            /
-                            <a class="delete" href="{% url 'inscription_delete' id=elt.id %}"><i
-                                    class="fas fa-trash-alt"></i></a>
+                            <a href="#" class="delete"
+                                style="text-decoration: none; margin-left: 2px;">
+                                <i class="fas fa-trash-alt" style="color: black;"></i>
+                            </a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -67,7 +71,6 @@
             document.getElementById('searchInput').addEventListener('keyup', function () {
                 const filter = this.value.toLowerCase();
                 const rows = document.querySelectorAll('#inscriptionsTable tbody tr');
-
                 rows.forEach(row => {
                     const cells = row.getElementsByTagName('td');
                     let rowContainsFilter = false;
@@ -79,7 +82,6 @@
                         }
                     }
 
-                    // Afficher toutes les lignes si le champ est vide
                     row.style.display = (filter === '' || rowContainsFilter) ? '' : 'none';
                 });
             });

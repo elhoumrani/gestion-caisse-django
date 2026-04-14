@@ -13,7 +13,7 @@ import codecs
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 
-from caisse.models import Payment
+from caisse.models import Payement
 from comptes.models import Utilisateur
 from .forms import CustomUserCreationForm, UserUpdateForm
 
@@ -27,7 +27,14 @@ def connexion(request):
         utilisateur = authenticate(username=nom, password=pwd)
         if utilisateur is not None:
             login(request, utilisateur)
-            return redirect('payment_index')
+            if request.user.role=="PROVISEUR":
+                 return redirect('dash_board')
+            elif request.user.role=="COMPTABLE":
+                return redirect('payment_index')
+            elif request.user.role=="SECRETAIRE":
+                return redirect('inscription_index')
+            elif request.user.role== "CAISSIER":
+                return redirect('payment_index')
         else:
             message="identifications invalides" 
             return render(request, 'login.html', {"msg": message})
@@ -95,7 +102,7 @@ def info_compte(request):
     users = request.user
     nom = users.username
     email = users.email
-    operation = Payment.objects.filter(utilisateur_id=users.id).count()
+    operation = Payement.objects.filter(utilisateur_id=users.id).count()
 
     context = {
         "users": users,
@@ -129,16 +136,12 @@ def register(request):
         if request.method == 'POST':
             form = CustomUserCreationForm(request.POST)
             if form.is_valid():
-                if request.user.is_censeur:
-                    user = form.save()
-                    user.is_informaticien = True
-                    user.save()
-                    return redirect('acceuil')  # Redirige vers la page d'accuei
-                elif request.user.is_admin:
-                    user = form.save()
-                    return redirect('acceuil')
-                else : 
-                    return redirect('error_page')
+                
+                form.save()
+
+                return redirect('acceuil')
+            else : 
+                return redirect('error_page')
         else:
             form = CustomUserCreationForm()
         return render(request, 'create_user.html', {'form': form})

@@ -48,10 +48,8 @@
 
         {% block title %} Payement {% endblock %}
         {% block contenu %}
-        <div>
-            <input type="search" placeholder="rechercher" style="width: 100%; padding: 12px 8px; border: none; 
-               border-radius: 18px; background-color:lightgray;
-               margin: 25px 0px; font-size: 25px;" id="searchInput">
+        <div class="recherche">
+            <input type="search" placeholder="rechercher" id="searchInput">
         </div>
 
         <div class="tab">
@@ -60,7 +58,6 @@
                     <tr>
                         <th>Inscription</th>
                         <th>Montant</th>
-                        <th>Motif</th>
                         <th>Date payement</th>
                         <th>Caissier</th>
                         <th>Actions</th>
@@ -69,23 +66,20 @@
                 <tbody>
                     {% for list in liste %}
                     <tr>
-                        <td>{{list.inscription}}</td>
+                        <td>{{list.frais_inscription}}</td>
                         <td>{{list.montant}}</td>
-                        <td>{{ list.motif }}</td>
                         <td>{{list.date_paiement}}</td>
-                        <td>{{list.utilisateur.username}}</td>
+                        <td>{{list.utilisateur.username }}</td>
                         <td>
-                            <a href="{% url 'payment_edit' id=list.id %}" class="edit"
-                                style="text-decoration: none; cursor: pointer; margin-right: 2px;">
-                                <i class="fas fa-edit" style="color: black;"></i>
+                            <a href="{% url 'recu_paiement' paiement_id=list.id %}"
+                                target="_blank"
+                                class="btn btn-sm btn-outline-primary">
+                                🖨️ Imprimer
                             </a>
-                            <a href="{% url 'pdf_generate' id=list.id %}" target="_blank" class="print-link"
-                                style="text-decoration: none;">
-                                <i class="fas fa-print" style="color: black;"></i>
-                            </a>
-                            <a href="{% url 'payment_delete' id=list.id %}" class="delete"
-                                style="text-decoration: none; margin-left: 2px;">
-                                <i class="fas fa-trash-alt" style="color: black;"></i>
+                            <a href="{% url 'payment_cancel' paiement_id=list.id %}" class="delete"
+                                style="text-decoration: none; margin-left: 8px;">
+                                <i class="fas fa-trash-alt" style="color: black; margin: 2px;"></i>
+                                Annuler
                             </a>
                         </td>
                     </tr>
